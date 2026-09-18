@@ -90,3 +90,54 @@ Planning and rule-preservation documentation may be updated before AssemblyAI su
 - [ ] Record pre-existing UCII vs. hackathon-created work.
 - [ ] Produce <=3 minute demo.
 - [ ] Complete Devpost submission well before deadline.
+
+
+## HUMAN lifecycle + Alexa+-scoped UCII entitlement
+
+This project adopts the same reusable UCII HUMAN onboarding and governance architecture used by other UCII product integrations while keeping Alexa+ product state and economic entitlement strictly isolated.
+
+### Shared UCII lifecycle
+
+`NEW USER → PRODUCT-SCOPED ECONOMIC ACCESS → HUMAN UCII IDENTITY → AUTHENTICATION/CREDENTIAL → GOVERNANCE → RECOVERY → AGENT DELEGATION → AUTHORIZATION → EXECUTION`
+
+The HUMAN UCII identity is durable and portable. Alexa+ must not create a separate HUMAN identity merely because the participant also uses another UCII-enabled product.
+
+Reusable lifecycle capabilities belong in UCII core: bounded controllers, controller expiry/rotation/revocation, credential recovery preserving identity, fail-closed recovery, lockout protection, and pre-established succession/incapacity handling. Alexa+, voice interpretation, an LLM, challenge possession, payment, or entitlement must never become a governance authority root.
+
+### Alexa+ entitlement isolation
+
+Alexa+ economic access must use its own product-scoped entitlement. It is not a general "free UCII" property of the HUMAN identity and is not interchangeable with an entitlement issued for another integration.
+
+`HUMAN UCII IDENTITY = portable`
+
+`ALEXA+ ENTITLEMENT = Alexa+-only economic access`
+
+`OTHER PRODUCT ENTITLEMENT = separate capability`
+
+`GOVERNANCE / DELEGATED AUTHORITY = separate from all entitlements`
+
+A valid Alexa+ entitlement may satisfy only the economic gate for explicitly approved UCII operations required by Alexa+. It must be bounded by the participant/credential, an explicit Alexa+ product/service identifier, allowlisted UCII HTTP method+path operations, validity/expiry, and independent revocation.
+
+The same entitlement presented outside Alexa+ scope must be rejected and normal UCII economic policy/x402 applies where applicable.
+
+### First-use economic bootstrap
+
+Because normal service-entitlement proof is credential-bound, a participant who has no UCII identity/credential cannot yet create that proof. Alexa+ therefore requires a separate narrowly bounded enrollment capability for first use.
+
+That enrollment capability must be minimum-scope, short-lived and/or single-purpose where appropriate, non-transferable, usable only for the exact Alexa+ enrollment surface, and incapable of creating authentication, governance, delegated authority, authorization, revocation authority, or execution authority. A reusable anonymous free-UCII token is forbidden.
+
+After successful participant establishment, the enrollment capability transitions out of the path and normal Alexa+-scoped credential-bound entitlement is used.
+
+### Required isolation proofs
+
+Implementation must prove:
+
+`VALID PARTICIPANT + VALID ALEXA+ ENTITLEMENT + ALLOWED ALEXA+ OPERATION → ECONOMIC GATE SATISFIED`
+
+`SAME PARTICIPANT + SAME ALEXA+ ENTITLEMENT + NON-ALEXA+ OPERATION → ENTITLEMENT REJECTED`
+
+It must also prove that entitlement never substitutes for authentication, HUMAN governance authority, delegated action authority, fresh UCII authorization, or execution permission.
+
+Revoking Alexa+ entitlement must not revoke the HUMAN identity. Revoking Alexa+ delegated authority must not revoke product entitlement. Revoking entitlement must not create or remove governance authority.
+
+This architecture is intentionally shared at the UCII-core level while Alexa+-specific entitlement and integration state remain isolated from every other product.
