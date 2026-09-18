@@ -8,21 +8,32 @@ Every implementation objective follows:
 
 Avoid batching unrelated changes. Do not mark roadmap work complete until proof exists.
 
+## Competition sequencing
+
+- [ ] Finish and submit AssemblyAI by September 30 before beginning the Alexa+ implementation build.
+- [ ] After AssemblyAI submission, promote Alexa+ to the highest-priority competition build.
+- [ ] Alexa+ takes priority over the October 12-18 competition build.
+- [ ] Preserve enough time before October 23 for adversarial testing, repeated demo rehearsal, friction/product-feedback completion, video production, and submission verification.
+
+Planning and rule-preservation documentation may be updated before AssemblyAI submission, but do not split active implementation focus.
+
 ## Phase 0 — Foundation
 
 - [x] Create standalone public repository.
 - [x] Establish project concept and architectural boundary.
 - [x] Establish hackathon requirement contract.
 - [x] Start friction and product-feedback records before integration work.
-- [ ] Verify official Alexa+ resources and exact current MCP integration requirements before implementation.
+- [x] Verify current official Alexa+ minimum MCP requirement: spec 2025-11-25 or later over Streamable HTTP for the self-hosted MCP path.
+- [x] Record the official up-to-10% Stage 2 friction-log bonus and contemporaneous logging requirement.
+- [ ] Reverify official Alexa+ resources immediately before implementation because hackathon requirements may change.
 
 ## Phase 1 — Minimal MCP boundary
 
 - [ ] Establish supported language/runtime and dependency policy.
-- [ ] Implement self-hosted MCP Streamable HTTP server using the hackathon-required MCP specification.
+- [ ] Implement self-hosted MCP Streamable HTTP server using MCP spec 2025-11-25 or later.
 - [ ] Expose one harmless diagnostic/read-only tool first.
 - [ ] Prove Alexa+/simulation can invoke the MCP server.
-- [ ] Record onboarding friction and evidence.
+- [ ] Record onboarding friction from the first implementation session and preserve supporting evidence.
 
 ## Phase 2 — UCII identity integration
 
@@ -46,6 +57,7 @@ Avoid batching unrelated changes. Do not mark roadmap work complete until proof 
 - [ ] Keep capability/identity/authority states visibly distinct.
 - [ ] Add human approval only where the demo contract requires it.
 - [ ] Ensure failures are coherent and safe rather than silent.
+- [ ] Ensure the experience is a real agentic authority workflow, not a basic MCP wrapper around existing UCII APIs.
 
 ## Phase 5 — AWS Builder evaluation
 
@@ -73,7 +85,7 @@ Avoid batching unrelated changes. Do not mark roadmap work complete until proof 
 - [ ] Public-repo secret scan.
 - [ ] Setup reproduction from a clean environment.
 - [ ] Complete product feedback.
-- [ ] Complete friction log.
+- [ ] Complete contemporaneous friction log and verify entries satisfy the official optional bonus fields.
 - [ ] Confirm mini-challenge eligibility.
 - [ ] Record pre-existing UCII vs. hackathon-created work.
 - [ ] Produce <=3 minute demo.
