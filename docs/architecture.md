@@ -235,6 +235,167 @@ Alexa+ may interpret:
 
 as a **proposed policy change**, but it must not apply the change directly. The proposal must pass the required human authentication/approval ceremony before UCII records the new policy.
 
+## In-the-Moment Authority Adaptation
+
+Authority policy must remain adjustable at the point of decision. Standing settings are the human's normal authority envelope, not a requirement to predict every future circumstance in advance.
+
+When a live request reaches an authority boundary, the human must be able to pause the decision and discuss the circumstances with Alexa+ before execution. Alexa+ may use that conversation to understand the human's desired adjustment and formulate a **proposed authority change**. Alexa+ must not apply or persist that change by itself.
+
+The interaction should support four explicit outcomes:
+
+```text
+JUST THIS TIME
+    -> narrowly scoped one-use / case-specific delegation
+
+REMEMBER THIS RULE
+    -> authenticated persistent policy update
+
+REMEMBER UNTIL ...
+    -> bounded policy/delegation with explicit expiry or use limit
+
+NEVER AGAIN / MAKE THIS MORE RESTRICTIVE
+    -> persistent narrowing or prohibition
+```
+
+### Decision-time lifecycle
+
+```text
+ACTION REQUEST
+      |
+      v
+UCII POLICY CHECK
+      |
+      v
+CURRENT DECISION / AUTHORITY BOUNDARY
+      |
+      v
+HUMAN: "Hold on, Alexa. Let's discuss this."
+      |
+      v
+CONVERSATIONAL CONTEXT / CLARIFICATION
+      |
+      v
+ALEXA+ PROPOSES EXACT AUTHORITY ADJUSTMENT
+      |
+      v
+HUMAN SELECTS SCOPE
+  just this time / remember / remember until / restrict
+      |
+      v
+REQUIRED HUMAN AUTHENTICATION + CONFIRMATION
+      |
+      v
+UCII RECORDS AUTHORIZED CHANGE
+      |
+      v
+FRESH UCII POLICY CHECK
+      |
+      v
+AUTHORIZED / AUTHORIZATION_REQUIRED / DENIED
+```
+
+The fresh policy check is mandatory. The conversation itself is never execution authority.
+
+### Learning without self-authorizing
+
+Alexa+ may learn enough from prior approved decisions to make future proposals more useful, but **learned preference is not learned authority**.
+
+A remembered conversational preference may help Alexa+ say:
+
+> "Last time you chose to require confirmation for purchases from new merchants. Would you like to apply that rule here?"
+
+It may not silently convert that observation into permission or remove an existing restriction.
+
+Durable authority changes exist only after the human approves the proposed change through the required ceremony and UCII records the resulting policy.
+
+This preserves the distinction:
+
+```text
+Alexa+ memory / learned preference
+        !=
+UCII authoritative policy
+```
+
+### Loosening and tightening
+
+Decision-time adaptation must work in both directions.
+
+The human may **loosen** authority for a specific circumstance without widening the general policy:
+
+```text
+Normal autonomous purchase limit: $25
+Current specific purchase: $80
+
+Human decision:
+"Allow this one."
+
+Result:
+one-use $80 transaction-bound delegation
+standing $25 policy remains unchanged
+```
+
+The human may also **tighten** authority immediately:
+
+```text
+Current policy:
+approved merchant purchases <= $25 are autonomous
+
+Human decision:
+"Ask me before buying anything from this merchant from now on."
+
+Result:
+persistent restriction recorded by UCII
+future matching requests require confirmation
+```
+
+Tightening authority must never require Alexa+ to agree with the human's risk assessment. Human authority remains controlling.
+
+### Saving a decision for future opportunities
+
+When the human wants a live decision to become a future rule, Alexa+ must present the proposed durable change clearly enough for meaningful confirmation.
+
+Example:
+
+```text
+CURRENT RULE
+Groceries from approved merchants:
+autonomous <= $25
+
+PROPOSED RULE
+Groceries from this merchant:
+autonomous <= $75
+
+Persistence:
+until revoked
+
+[ JUST THIS TIME ] [ SAVE RULE ] [ CANCEL ]
+```
+
+After authenticated approval, UCII records the policy update. A later matching request is evaluated against that saved policy rather than relying on Alexa+ to remember that the human once said yes.
+
+### Policy-change provenance
+
+Every durable in-the-moment adaptation should preserve attributable provenance sufficient to answer:
+
+- what rule existed before;
+- what circumstance triggered reconsideration;
+- what exact change was proposed;
+- who approved it;
+- what authentication/approval ceremony was satisfied;
+- whether the change was one-time, persistent, expiring, or prohibitive;
+- when it became effective;
+- whether it was later modified or revoked.
+
+Raw secrets or unnecessary conversational content must not be placed in provenance records.
+
+### Product requirement
+
+The judge-facing product should make this flexibility visible. Authority Settings define the baseline, while live conversation provides a safe route to adapt that baseline or create a bounded exception when reality does not fit the preset rule.
+
+The product principle is:
+
+> **The human does not have to predict every future case. UCII preserves the rules; Alexa+ helps the human adapt them through conversation; only the human can authorize the resulting change.**
+
 ## Canonical action request
 
 Alexa+ converts conversation into a structured request before authorization.
