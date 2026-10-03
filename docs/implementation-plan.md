@@ -143,6 +143,35 @@ Revoking Alexa+ entitlement must not revoke the HUMAN identity. Revoking Alexa+ 
 This architecture is intentionally shared at the UCII-core level while Alexa+-specific entitlement and integration state remain isolated from every other product.
 
 
+## Completed website UI foundation — 2026-10-02
+
+Evidence: [published website](https://ucii-alexa-control.sportgen-ai.chatgpt.site), website source commit `3658f4be252f1ce0f6b69819b844f438b19b820b`, successful TypeScript check and production build recorded during creation. The user has reviewed the published visual result. This is completion of the frontend foundation only; browser interaction/accessibility and live security lifecycle acceptance are not yet verified.
+
+- [x] Build and privately publish the UCII for Alexa+ visual interface from the supplied reference.
+- [x] Implement Home, Authority, Activity, and Security / Identity navigation and page surfaces.
+- [x] Implement local text request drafting, suggestion selection, editable operation/resource/environment, and cancellation.
+- [x] Implement human-readable local policy editors and proposed-value review dialog.
+- [x] Implement temporary-authority proposal dialog with resource, operation, expiry choices and one-use limit.
+- [x] Implement identity/verification surfaces, connection dialog, and revocation/lock confirmation dialogs.
+- [x] Implement activity empty state, filter selection controls, and separately labeled local connection diagnostics.
+- [x] Establish browser/server adapter boundaries and an explicit 503 disconnected response without fabricated authorization or execution.
+- [x] Add responsive layout rules, focus styles, semantic dialog attributes, and reduced-motion handling to source.
+- [x] Pass TypeScript checking and production build; publish the resulting Site.
+
+### Remaining frontend completion
+
+These are implementation tasks as well as wiring and tests. Reuse the existing visual foundation rather than rebuilding it.
+
+- [ ] Complete reusable AUTHORIZED / AUTHORIZATION_REQUIRED / DENIED decision cards and escalation choices.
+- [ ] Complete live current-policy diffs, approval completion, durable/bounded policy choices and authority reduction workflows.
+- [ ] Render actual identity, authority, connection, policy, execution and activity responses; replace fixed disconnected placeholders.
+- [ ] Add protected execution/status and proof disclosure surfaces.
+- [ ] Connect supported real conversation events and replace the default-operation draft behavior.
+- [ ] Verify browser interactions, keyboard/dialog focus management, mobile layouts and accessibility.
+- [ ] Wire and validate the full [website integration contract](website-ui-integration.md), including adversarial and repeatable end-to-end lifecycle tests.
+
+The original Phase 2–4 security/product objectives remain unchecked because a UI shell does not establish verified identities, actual grants, execution, revocation or provenance. In design-build.md, the minimal four-area UI foundation (step 13) has been implemented ahead of the planned backend sequence; the full decision card (step 14) and integrated product experience remain pending.
+
 ## Website integration tracking — 2026-10-02
 
 The existing [UCII for Alexa+ website](https://ucii-alexa-control.sportgen-ai.chatgpt.site) is a disconnected UI foundation, not a completed authority integration. Its source currently lives separately from this repository.
