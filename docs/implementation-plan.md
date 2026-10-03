@@ -10,10 +10,12 @@ Avoid batching unrelated changes. Do not mark roadmap work complete until proof 
 
 ## Competition sequencing
 
-- [ ] Finish and submit AssemblyAI by September 30 before beginning the Alexa+ implementation build.
-- [ ] After AssemblyAI submission, promote Alexa+ to the highest-priority competition build.
+- [x] Finish and submit AssemblyAI by September 30 before beginning the Alexa+ implementation build.
+- [x] After AssemblyAI submission, promote Alexa+ to the highest-priority competition build.
 - [ ] Alexa+ takes priority over the October 12-18 competition build.
 - [ ] Preserve enough time before October 23 for adversarial testing, repeated demo rehearsal, friction/product-feedback completion, video production, and submission verification.
+
+Confirmed by Brad Phee on 2026-10-02: the AssemblyAI build is complete and officially submitted; Alexa+ is now the highest-priority competition build.
 
 Planning and rule-preservation documentation may be updated before AssemblyAI submission, but do not split active implementation focus.
 
