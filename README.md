@@ -37,6 +37,10 @@ The submission is planned for the **Alexa+ track**, with evaluation of the **AWS
 
 Detailed engineering and submission contracts live in [`docs/`](docs/).
 
+- [Website UI integration contract](docs/website-ui-integration.md): exact control wiring, missing backend workflows, and acceptance evidence for the existing disconnected website.
+- [Implementation plan](docs/implementation-plan.md): bounded implementation checkpoints.
+- [Friction log](docs/friction-log.md): factual observed friction; internal UI gaps are distinguished from Amazon/AWS platform issues.
+
 ## License
 
 This project is intended to be open source. See [`LICENSE`](LICENSE) once the repository foundation is complete.

@@ -141,3 +141,16 @@ It must also prove that entitlement never substitutes for authentication, HUMAN 
 Revoking Alexa+ entitlement must not revoke the HUMAN identity. Revoking Alexa+ delegated authority must not revoke product entitlement. Revoking entitlement must not create or remove governance authority.
 
 This architecture is intentionally shared at the UCII-core level while Alexa+-specific entitlement and integration state remain isolated from every other product.
+
+
+## Website integration tracking — 2026-10-02
+
+The existing [UCII for Alexa+ website](https://ucii-alexa-control.sportgen-ai.chatgpt.site) is a disconnected UI foundation, not a completed authority integration. Its source currently lives separately from this repository.
+
+Follow [Website UI Integration Contract](website-ui-integration.md) for exact control mappings, response rendering, missing workflows, and acceptance evidence. Preserve the canonical order in [Design Build](design-build.md) and existing HUMAN governance / Alexa+-scoped entitlement requirements.
+
+- [x] Inspect website source and document actual wiring gaps.
+- [x] Record observed internal implementation friction separately from unobserved Amazon/AWS friction.
+- [ ] Implement and verify the integration contract's unchecked tasks.
+- [ ] Establish an explicit source synchronization/porting strategy before maintaining the website from this repo.
+- [ ] Attach real lifecycle evidence before marking integration complete.
