@@ -27,15 +27,15 @@ Planning and rule-preservation documentation may be updated before AssemblyAI su
 - [x] Start friction and product-feedback records before integration work.
 - [x] Verify current official Alexa+ minimum MCP requirement: spec 2025-11-25 or later over Streamable HTTP for the self-hosted MCP path.
 - [x] Record the official up-to-10% Stage 2 friction-log bonus and contemporaneous logging requirement.
-- [ ] Reverify official Alexa+ resources immediately before implementation because hackathon requirements may change.
+- [x] Reverify official Alexa+ resources immediately before implementation because hackathon requirements may change.
 
 ## Phase 1 — Minimal MCP boundary
 
-- [ ] Establish supported language/runtime and dependency policy.
-- [ ] Implement self-hosted MCP Streamable HTTP server using MCP spec 2025-11-25 or later.
-- [ ] Expose one harmless diagnostic/read-only tool first.
-- [ ] Prove Alexa+/simulation can invoke the MCP server.
-- [ ] Record onboarding friction from the first implementation session and preserve supporting evidence.
+- [x] Establish supported language/runtime and dependency policy.
+- [x] Implement self-hosted MCP Streamable HTTP server using MCP spec 2025-11-25 or later.
+- [x] Expose one harmless diagnostic/read-only tool first.
+- [x] Prove Alexa+/simulation can invoke the MCP server.
+- [x] Record onboarding friction from the first implementation session and preserve supporting evidence.
 
 ## Phase 2 — UCII identity integration
 
@@ -176,7 +176,7 @@ The original Phase 2–4 security/product objectives remain unchecked because a 
 
 ## Website integration tracking — 2026-10-02
 
-The existing [UCII for Alexa+ website](https://ucii-alexa-control.sportgen-ai.chatgpt.site) is a disconnected UI foundation, not a completed authority integration. Its source currently lives separately from this repository.
+The existing [UCII for Alexa+ website](https://ucii-alexa-control.sportgen-ai.chatgpt.site) now has live MCP health, public identity retrieval, and agent credential verification. Human authentication, authority, execution and activity remain incomplete. Its source currently lives separately from this repository.
 
 Follow [Website UI Integration Contract](website-ui-integration.md) for exact control mappings, response rendering, missing workflows, and acceptance evidence. Preserve the canonical order in [Design Build](design-build.md) and existing HUMAN governance / Alexa+-scoped entitlement requirements.
 
@@ -185,3 +185,28 @@ Follow [Website UI Integration Contract](website-ui-integration.md) for exact co
 - [ ] Implement and verify the integration contract's unchecked tasks.
 - [ ] Establish an explicit source synchronization/porting strategy before maintaining the website from this repo.
 - [ ] Attach real lifecycle evidence before marking integration complete.
+
+
+## Wiring checkpoint — 2026-10-07
+
+Evidence and exact restart state: [October 7 wiring handoff](wiring-checkpoint-2026-10-07.md).
+
+- [x] Correct the public UCII API hostname and edge-compatible health fetch.
+- [x] Run the self-hosted MCP gateway persistently on Oracle, with HTTPS routing.
+- [x] Invoke initialize, tools/list and tools/call from the website backend.
+- [x] Establish separate HUMAN and integration AI_AGENT records using one-use product enrollment economic capabilities.
+- [x] Retain identity provisioning responses in encrypted operator custody.
+- [x] Retrieve both live public identity records into website cards.
+- [x] Provision the agent's first ML-DSA-65 signing credential and operation-scoped service entitlement.
+- [x] Run a separate protected signer with encrypted systemd credential delivery.
+- [x] Verify a fresh agent signature through the public UCII verification API using a separate economic entitlement proof.
+- [x] Connect website Verify agent credential to the real MCP tool and display fingerprint/check time with one-minute proof display expiry.
+- [x] Fix overlapping card buttons; operator confirmed the layout.
+- [ ] Connect human authentication and authenticated approval.
+- [ ] Secure application/gateway access before exposing approval, authority mutations or execution.
+- [ ] Complete real delegation, policy, authorization decisions, revocation, execution and provenance/activity.
+- [ ] Complete the conversational simulator and requested action interpretation.
+- [ ] Prove strict product isolation and expiry/revocation policy for recurring service entitlements. Current model is identity + method/path scoped; issued_by labeling is not product enforcement.
+- [ ] Preserve Oracle service configurations/scripts in reproducible deployment files.
+
+UCII application traffic uses its public API. Operator provisioning reused existing UCII administrative modules; those imports are not in the gateway. Source remains split between the Sites repository and this gateway repository, with exact Site commits recorded in the handoff.
