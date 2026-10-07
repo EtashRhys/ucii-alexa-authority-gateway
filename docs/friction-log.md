@@ -106,3 +106,15 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - **Evidence/reference:** Oracle nginx/health output and user-rendered website error on 2026-10-07 around 14:59–15:05 America/Toronto. Website fix source commit 876fd5f93fddb8474918dcc0f22ed8c9d737cca4.
 - **Status:** Fix built; publication and hosted user confirmation tracked separately. UCII runtime itself answered healthy; no end-to-end authority integration is claimed.
 - **Classification:** Internal implementation / hosting-runtime compatibility friction, not an established Amazon/Alexa+/AWS defect.
+
+
+## 2026-10-07 — Verified connection and identity enrollment
+
+- Website health recovery confirmed by the operator: UCII online, then real MCP initialize/list/call succeeded through the public HTTPS gateway.
+- Immediate HTTPS test after Nginx reload returned 404; subsequent local and public initialization both returned HTTP 200. No further routing change was required.
+- No HUMAN or Alexa integration agent existed in the identity listing. Separate one-use, root-controlled product enrollment authorizations covered POST /v1/identity for product ucii-alexa without payment.
+- HUMAN and integration AI_AGENT creation and subsequent retrieval succeeded. Full provisioning responses were retained using systemd encrypted credentials; controller material was not printed.
+- systemd-creds reported that the host credential secret is on unencrypted media. Custody currently uses host encryption; this warning does not establish hardware-backed or encrypted-disk protection.
+- Identity records alone do not establish credential possession, human authentication, delegated authority, or execution permission.
+- Added a read-only MCP identity tool with server-configured bindings and explicit UNVERIFIED status. Oracle deployment and website identity wiring remain pending validation.
+- These are internal integration observations, not claimed Amazon product defects.
