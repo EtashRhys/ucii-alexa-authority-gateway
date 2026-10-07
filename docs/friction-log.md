@@ -92,3 +92,17 @@ The entries below concern the website implementation inspected on 2026-10-02. Th
 #### Session requirements recorded with these findings
 
 Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to satisfy the economic gate without paying ourselves. Authentication, HUMAN governance, delegation and execution permission remain separate. Reuse relevant existing repositories and documentation rather than recreating established mechanisms. The grant request schema currently exposes identity_id, allowed_operations and granted_by; expiry, use limits and exact-action enforcement require source inspection before conclusions or changes.
+
+### 2026-10-07 — Website health integration used the wrong hostname and unsupported redirect mode
+
+- **Product/tool/API/SDK:** Sites-hosted website / Cloudflare Worker fetch; internal UCII connection adapter.
+- **Task attempted:** Wire Connection details / Check connection to real UCII health.
+- **Steps taken:** Publish a server-side health probe; compare Oracle local health and nginx routing; correct the URL to https://api.ucii.sportgen-ai.com/health; expose the caught error after the hosted check continued to fail.
+- **Expected:** Render healthy UCII independently of unconfigured Alexa+, authority gateway and executor.
+- **Actual:** The original ucii.sportgen-ai.com/health returned nginx 404; api.ucii.sportgen-ai.com/health returned 200 and {"service":"UCII","status":"healthy","version":"1.0.0"}. Hosted fetch then failed immediately with TypeError: Invalid redirect value, must be one of "follow" or "manual"; "error" is unsupported at the edge. Generic exception handling initially hid the cause.
+- **Severity:** medium; blocked the first live website connection check.
+- **Workaround:** Use the verified API hostname and redirect:"manual"; existing response validation rejects redirects as unhealthy. Record safe exception details instead of only a generic retry message.
+- **Actionable suggestion:** Validate runtime-specific fetch options and surface diagnostic causes before repeating user tests.
+- **Evidence/reference:** Oracle nginx/health output and user-rendered website error on 2026-10-07 around 14:59–15:05 America/Toronto. Website fix source commit 876fd5f93fddb8474918dcc0f22ed8c9d737cca4.
+- **Status:** Fix built; publication and hosted user confirmation tracked separately. UCII runtime itself answered healthy; no end-to-end authority integration is claimed.
+- **Classification:** Internal implementation / hosting-runtime compatibility friction, not an established Amazon/Alexa+/AWS defect.
