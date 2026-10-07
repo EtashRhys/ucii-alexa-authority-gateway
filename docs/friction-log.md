@@ -116,7 +116,7 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - HUMAN and integration AI_AGENT creation and subsequent retrieval succeeded. Full provisioning responses were retained using systemd encrypted credentials; controller material was not printed.
 - systemd-creds reported that the host credential secret is on unencrypted media. Custody currently uses host encryption; this warning does not establish hardware-backed or encrypted-disk protection.
 - Identity records alone do not establish credential possession, human authentication, delegated authority, or execution permission.
-- Added a read-only MCP identity tool with server-configured bindings and explicit UNVERIFIED status. Oracle deployment and website identity wiring remain pending validation.
+- Added a read-only MCP identity tool with server-configured bindings and explicit UNVERIFIED status. Oracle deployment and website identity wiring subsequently confirmed by the operator.
 - These are internal integration observations, not claimed Amazon product defects.
 
 
@@ -127,5 +127,31 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - Agent first ML-DSA-65 credential and verification/execution economic entitlement provisioned using the existing UCII operator workflow. This grants no underlying action authority.
 - Dedicated Alexa signer service and IPC group installed, with encrypted systemd credential delivery. Socket confirmed mode 660. Initial socket check at 492 ms was premature; startup completed after approximately five seconds.
 - A fresh agent credential signature and separate request-bound entitlement proof were sent to POST /v1/credentials/verify. UCII returned HTTP 200, verified true, matching identity and fingerprint, status ACTIVE.
-- Gateway live verification tool added; Oracle deployment and website verification button remain pending.
+- Gateway live verification tool deployed; Oracle invocation and hosted website verification subsequently confirmed by the operator.
 - Website publish packaging initially produced an empty archive; regenerated unchanged build packaging and deployment succeeded.
+
+
+## 2026-10-07 — Hosted verification acceptance and card layout correction
+
+- **Task:** Test the live Verify agent credential control and inspect its rendered card.
+- **Expected:** Matching agent proof, fingerprint and time displayed without overlapping controls.
+- **Actual:** Operator confirmed VERIFIED and matching fingerprint. Retrieve identity and Verify agent credential initially competed for horizontal space on the card.
+- **Severity:** Low; visible layout defect, verification itself worked.
+- **Fix:** Full-width vertically stacked card buttons, explicit spacing and wrapping; build passed, publication succeeded, operator confirmed the result.
+- **Evidence:** Operator's rendered website text and visual feedback at approximately 16:17–16:22 America/Toronto; Site fix commit 1a3655a0b734757db2121575c13b3bb027455a20.
+- **Status:** Resolved and user confirmed.
+- **Classification:** Internal website layout friction.
+
+## 2026-10-07 — Alexa developer-tool availability clarified
+
+- **Task:** Determine whether Alexa+ device/console setup was needed before wiring.
+- **Finding:** Official FAQ says gated add-on tools are unavailable to hackathon participants; a website acting as a real Streamable HTTP MCP client is an accepted simulated-experience path.
+- **Resolution:** Build and test the actual MCP client/server integration now; label the future conversational surface accurately as a simulator. Do not claim an actual Alexa device connection.
+- **Source:** https://amazonappdev2026.devpost.com/details/faqs (rechecked October 7).
+- **Classification:** Documented platform access constraint and setup clarification, not an observed failed Alexa API call or fabricated Amazon defect.
+
+## 2026-10-07 — Publication archive retry
+
+- A layout publication archive was rejected as invalid/incomplete. Repackaging the unchanged successful build produced an accepted archive and successful deployment.
+- Earlier identity publication similarly yielded a zero-byte archive. Preserve archive-size/contents verification in deployment workflow rather than retrying an empty artifact.
+- Classification: Internal build/publication tooling friction; resolved for today's deployments.
