@@ -118,3 +118,14 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - Identity records alone do not establish credential possession, human authentication, delegated authority, or execution permission.
 - Added a read-only MCP identity tool with server-configured bindings and explicit UNVERIFIED status. Oracle deployment and website identity wiring remain pending validation.
 - These are internal integration observations, not claimed Amazon product defects.
+
+
+## 2026-10-07 — Live identity cards and protected credential proof
+
+- Operator confirmed both website identity cards retrieve active public records through MCP.
+- Gateway restart initially produced HTTPS 502. Journal showed startup completed nine seconds after restart; later local identity call returned HTTP 200. Future deployment tests should wait for readiness.
+- Agent first ML-DSA-65 credential and verification/execution economic entitlement provisioned using the existing UCII operator workflow. This grants no underlying action authority.
+- Dedicated Alexa signer service and IPC group installed, with encrypted systemd credential delivery. Socket confirmed mode 660. Initial socket check at 492 ms was premature; startup completed after approximately five seconds.
+- A fresh agent credential signature and separate request-bound entitlement proof were sent to POST /v1/credentials/verify. UCII returned HTTP 200, verified true, matching identity and fingerprint, status ACTIVE.
+- Gateway live verification tool added; Oracle deployment and website verification button remain pending.
+- Website publish packaging initially produced an empty archive; regenerated unchanged build packaging and deployment succeeded.
