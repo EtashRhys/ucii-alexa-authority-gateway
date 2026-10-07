@@ -60,3 +60,35 @@ The entries below concern the website implementation inspected on 2026-10-02. Th
 - **Evidence/reference:** app/page.tsx operation state and propose(); integration contract section 4.
 - **Status:** Open; documented, not fixed by this documentation change.
 
+
+### 2026-10-07 — Oracle integration inspection lacks ripgrep
+
+- **Product/tool/API/SDK:** Self-hosted Oracle development environment; internal UCII/Alexa+ integration tooling.
+- **Task attempted:** Locate existing service-entitlement and enrollment implementations before wiring the website's economic access.
+- **Steps taken:** Read live OpenAPI from localhost port 8000; inspect authorization request schemas; run a bounded source search under src, tests and docs.
+- **Expected:** Source search returns existing implementation and documentation references.
+- **Actual:** Shell reported `Command 'rg' not found`; the entitlement source search did not run. OpenAPI retrieval succeeded.
+- **Severity:** low; source inspection is delayed, not a UCII runtime failure.
+- **Workaround:** Use Python standard-library source scanning without installing packages. Follow-up execution is pending.
+- **Actionable suggestion:** Provide a dependency-free inspection command or explicitly list optional development tools in setup instructions.
+- **Evidence/reference:** User-provided Oracle terminal output, 2026-10-07 approximately 14:37–14:41 America/Toronto; UCII checkout dfea543.
+- **Status:** Open pending fallback inspection.
+- **Classification:** Internal development friction; no Amazon/Alexa+/AWS platform defect or qualifying bonus claim established.
+
+### 2026-10-07 — Alexa+ runtime foundation is not yet deployed
+
+- **Product/tool/API/SDK:** Internal Alexa+ UCII gateway deployment and website integration.
+- **Task attempted:** Identify the existing backend to connect the published website.
+- **Steps taken:** Check expected checkout, Alexa-named systemd services, live UCII API and gateway repository tree.
+- **Expected:** Locate runtime implementation and supported contracts if already provisioned.
+- **Actual:** /opt/ucii/ucii-alexa-authority-gateway was absent; no Alexa-named service was listed. Gateway repository main at 26a963508c501e128f54466a57378bdd880ceaee contained documentation/assets but no backend implementation. UCII service was active; supported public authorization routes were present.
+- **Severity:** blocking for end-to-end website operation; missing implementation is not a platform defect.
+- **Workaround:** Inspect reusable UCII and related-project implementations, then implement the gateway against verified public contracts. Keep disconnected website states truthful meanwhile.
+- **Actionable suggestion:** Track gateway setup, website integration and runtime acceptance separately so a completed UI is not mistaken for a deployed backend.
+- **Evidence/reference:** Oracle terminal inspection on 2026-10-07 approximately 14:35 America/Toronto; live OpenAPI and repository inspection; [website integration contract](website-ui-integration.md).
+- **Status:** Open. No deployed gateway or completed lifecycle is claimed.
+- **Classification:** Internal build/deployment gap; no Amazon/Alexa+/AWS platform defect or qualifying bonus claim established.
+
+#### Session requirements recorded with these findings
+
+Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to satisfy the economic gate without paying ourselves. Authentication, HUMAN governance, delegation and execution permission remain separate. Reuse relevant existing repositories and documentation rather than recreating established mechanisms. The grant request schema currently exposes identity_id, allowed_operations and granted_by; expiry, use limits and exact-action enforcement require source inspection before conclusions or changes.
