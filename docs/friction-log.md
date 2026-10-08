@@ -170,3 +170,10 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - Nginx exact HTTPS login/session routes installed and validated. Public session request without authentication returned 401.
 - Website login form, HttpOnly Secure SameSite cookie, session display and sign-out implemented. Hosted browser acceptance remains pending.
 - These are internal implementation/runtime observations, not claimed Amazon product defects.
+
+
+### 2026-10-08 — Hosted HUMAN session acceptance and authority-check scope
+- Owner confirmed hosted login displays AUTHENTICATED on Security / Identity and Home, and sign-out returns SIGNED OUT. Password authentication is explicitly separate from cryptographic device proof and action approval.
+- Reviewed UCII delegated authority router, request/response schemas and evaluator. The existing check verifies the bound agent credential and exact logical operation; resource and environment constraints are not evaluated by this endpoint.
+- Added read-only MCP tool `ucii_authority_check`: internally generates and signs an operation challenge, verifies the returned identity/credential/operation and authority state, and always reports execution blocked. No authority grants, payments or execution are performed.
+- Python compilation passed. Oracle live acceptance and website button wiring remain pending; no live authority outcome has been asserted.
