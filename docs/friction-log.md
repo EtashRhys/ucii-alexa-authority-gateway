@@ -297,3 +297,12 @@ Owner confirmed all nine UCII exact-action approval tests passed on Oracle at 8a
 ## Exact confirmation wiring — 2026-10-08
 
 Owner confirmed live approval table activation and backup at 90527da. New protected confirmation wiring, exact issuance permit preparation, HTTPS installer and status reconciliation are committed. Local 31 tests passed; website TypeScript passed. A draft claim now prevents approval/cancellation races. Uncertain outcomes require UCII status retrieval; duplicate issuance cannot create another use. Root exact permits remain separate from standing authority permits. Oracle deployment/acceptance is pending; no live exact approval or execution is claimed. See docs/engineering/protected-exact-approval-wiring.md.
+
+
+## Exact approval live acceptance and revocation — 2026-10-08
+
+Oracle: all 31 prior gateway tests passed. Installer restarted services and installed nginx route but readiness GET lacked required proposal UUID, causing HTTP 400. Readiness query now supplies a canonical UUID and expects unauthenticated 401.
+
+Owner accepted exact approval 9ca0fb94-4db5-4b55-8956-f2faece26dcf for proposal 3ec98387-092b-43f0-bdfb-edb44773fc5b, digest sha256:adf177fb9e978faf06ff6237fed59e72a6be17dfd295f3e2b6879b844a3696e0. UI showed ACTIVE, then EXPIRED at 22:47:49 UTC, always execution_allowed=false. Expired record remains unchanged. The prior proposal APPROVED label confused historical issuance with current validity; display now says APPROVAL RECORDED.
+
+New finite revoke_exact_approval verifies current HUMAN session/controller custody, targets the product/proposal/owner/agent bound UCII row, and removes only unused unexpired approval. Revocation creates no authority and needs no new issuance permit. Reserved or expired records are unchanged; repeated REVOKED response is reconciliation. Local suite now 34 tests passes. Oracle update and live fresh-approval revocation acceptance pending. No execution or Alexa conversation enabled.
