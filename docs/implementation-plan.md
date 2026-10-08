@@ -253,9 +253,23 @@ The next execution milestone still requires exact resource/environment binding a
 - [x] Define immutable canonical action representation with server-derived UCII agent identity, exact operation, resource, environment and artifact digest.
 - [x] Require an immutable SHA-256 artifact digest for infrastructure.deploy; mutable labels such as latest/main are not exact deployment targets.
 - [x] Test deterministic encoding, changed-field bindings, malformed scope, immutable proposals and rejection of browser-supplied subject/approval fields (six local tests passed).
-- [ ] Run canonical-action tests on Oracle. This module is not yet connected to a live route or executor.
-- [ ] Wire the existing draft UI to capture an exact deployment artifact and create a server-side proposal identifier/digest. A digest is request identity, never permission.
+- [x] Run all six canonical-action tests on Oracle (owner confirmed 2026-10-08). The module is now used by the proposal route; no protected executor is connected.
+- [x] Implement existing draft UI artifact capture and authenticated server-held proposal creation/retrieval/cancellation. A digest is request identity, never permission. Oracle installation and hosted acceptance remain below.
 - [ ] Implement protected HUMAN approval for the stored exact proposal with short validity and one-use limits; reuse UCII identity, credential and controller boundaries. Do not reuse the already consumed standing-grant permit.
 - [ ] Enforce the exact proposal binding, current UCII authority, expiry and atomic usage at the protected executor. Resource/environment approval is not established by today's operation-only delegated API.
 
 The original operation-authority record remains revoked. Canonical encoding alone does not authorize, deploy, mint authority or constitute production acceptance.
+
+
+### Exact proposal wiring implementation — 2026-10-08
+
+- [x] Add private SQLite storage for immutable action snapshots, owner-bound retrieval, fixed 15-minute validity, cancellation and idempotent submission.
+- [x] Authenticate each proposal request through the existing UCII HUMAN session; derive the agent subject from server configuration. Proposals store no credentials or session tokens.
+- [x] Add website Save exact proposal / Retrieve saved proposal / Cancel saved proposal controls and artifact digest field. Validate stored digest and fields in the server adapter.
+- [x] Preserve a device-local proposal reference for retrieval after reload; this reference never establishes approval or execution authority.
+- [x] Pass 23 isolated tests across sessions, canonical actions and persistent proposals; pass website TypeScript and production build.
+- [ ] Install the private state directory and exact HTTPS proposal route on Oracle using deploy/install_proposals.py, and rerun tests there.
+- [ ] Verify owner can save, retrieve after reload and cancel the same hosted proposal; edits must require a new saved snapshot.
+- [ ] Verify live session renewal after the installation restart and new sign-in.
+
+Proposal storage is application draft state, not an alternative UCII authority database. Every record reports approval NOT_ESTABLISHED and execution_allowed false. Protected one-use approval and the executor remain the next dependent steps.
