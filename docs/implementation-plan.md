@@ -234,3 +234,15 @@ This checkpoint distinguishes live acceptance from remaining production work.
 - [ ] Complete recurring entitlement product isolation and remaining adversarial validation.
 
 The one-use limit applies to grant issuance authorization, not execution of the standing authority. The grant is operation-scoped, persists until revoked, and does not establish resource/environment approval. No execution has been permitted or attempted. The current route is a verified integration milestone, not completion of the full production authority design.
+
+
+### Sign-in duration follow-up — 2026-10-08
+
+- [x] Implement 15-minute, 1-hour and 4-hour choices with a fixed server deadline and secure opaque browser cookie.
+- [x] Reuse UCII token refresh behind the gateway; serialize rotation and protected authority requests without storing passwords or changing action authority.
+- [x] Validate eight isolated gateway session tests and website TypeScript checks.
+- [x] Separate the last retrieved active authority record reference from the one-minute permission check so revocation review remains accessible.
+- [ ] Pull and restart the Oracle gateway; verify selected expiry and sign-out through the hosted website.
+- [ ] Observe live token renewal and retention beyond one hour for the four-hour option. A restart or failed renewal ends the in-memory session early.
+
+The next execution milestone still requires exact resource/environment binding and a protected executor. The previously revoked operation authority remains revoked; these login changes do not recreate it.
