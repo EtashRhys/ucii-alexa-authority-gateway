@@ -201,3 +201,11 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - Added non-MCP /auth/authority gateway route for explicit grant/revoke confirmation. It resolves the HUMAN session, passes the server-held UCII token only over local IPC, and verifies public mutation metadata.
 - Protected custody independently validates that HUMAN token with UCII and consumes a matching root-owned one-use lifecycle authorization before invoking UCII's controller/authority primitives.
 - Python compilation passed. Gateway route live acceptance, root operator authorization preparation, HTTPS routing and website approval UI remain pending. Operation grants are standing authority; expiry of an issuance permit must not be presented as expiry or single-use execution of the granted authority.
+
+
+### 2026-10-08 — HTTPS approval gate and hosted review controls
+- Owner verified local and HTTPS /auth/authority return HTTP 401 without a HUMAN session.
+- Published website source `e57b6d755bc103f338e491c78842e747df3c1937`: operation grant review and exact-record revoke review now use a server-side adapter with strict origin, finite request shape, session validation and response checks. UCII tokens stay on the server.
+- Review explicitly describes standing operation authority, not a single-use action grant. Resource/environment constraints and protected execution remain unestablished.
+- No grant authorization has been prepared and no successful grant/revoke is asserted. Next acceptance: authenticated website confirmation must remain blocked when the root-controlled operator permit is missing.
+- TypeScript checking, production build and private publication succeeded.
