@@ -82,6 +82,27 @@ class ExactProtectedTests(unittest.TestCase):
         self.permit['expires_at']=(self.now+timedelta(minutes=1)).isoformat();self.write_permit()
         (self.root/(self.proposal+'.exact-approval.json')).chmod(0o622)
         with self.assertRaises(ValueError):self.call()
+    def test_revoke_unused_exact_approval_and_repeat_are_safe(self):
+        issued=self.call()['approval']
+        request={k:self.request[k] for k in ('version','proposal_id','human_token')}
+        request['operation']='revoke_exact_approval'
+        first=exact_approval.handle(self.daemon,request,permit_directory=self.root,now=self.now)
+        second=exact_approval.handle(self.daemon,request,permit_directory=self.root,now=self.now)
+        self.assertEqual(first,second)
+        self.assertEqual(first['approval']['state'],'REVOKED')
+        self.assertEqual(first['approval']['approval_id'],issued['approval_id'])
+    def test_reserved_and_expired_approvals_are_not_changed_by_revoke(self):
+        issued=self.call()['approval']
+        request={k:self.request[k] for k in ('version','proposal_id','human_token')}
+        request['operation']='revoke_exact_approval'
+        result=exact_approval.handle(self.daemon,request,permit_directory=self.root,now=self.now+timedelta(minutes=4))
+        self.assertEqual(result['status'],'checked')
+        with self.factory() as db:
+            row=db.get(ExactActionApproval,issued['approval_id'])
+            self.assertEqual(row.state,'ACTIVE')
+            row.state='RESERVED';db.commit()
+        result=exact_approval.handle(self.daemon,request,permit_directory=self.root,now=self.now)
+        self.assertEqual(result['approval']['state'],'RESERVED')
     def test_status_is_owner_bound_and_does_not_issue(self):
         request={k:self.request[k] for k in ('version','proposal_id','human_token')}
         request['operation']='exact_approval_status'
