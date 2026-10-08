@@ -32,13 +32,14 @@ class ApprovalRoutesTests(unittest.TestCase):
         self.p=self.store.create(self.action,human_identity_id=self.human,idempotency_key=str(uuid4()))
         self.body={'proposal_id':self.p['proposal_id'],'action_digest':self.p['action_digest'],'confirmation':'APPROVE_EXACT_ACTION_ONCE'}
     def tearDown(self):self.environment.stop();self.folder.cleanup()
-    def run_route(self,exchange,authenticated=True):
+    def run_route(self,exchange,authenticated=True,method='POST'):
         mcp=Routes()
         async def session(request,op):
             if not authenticated:raise PermissionError()
             return op('test-only',self.human)
         install(mcp,session,exchange,lambda data,status=200:JSONResponse(data,status_code=status))
-        return asyncio.run(mcp.route(Request(self.body)))
+        request=Request(self.body);request.method=method
+        return asyncio.run(mcp.route(request))
     def test_no_session_or_changed_digest_sends_no_ipc(self):
         def never(intent):self.fail('IPC must not be called')
         self.assertEqual(self.run_route(never,False).status_code,401)
@@ -47,6 +48,14 @@ class ApprovalRoutesTests(unittest.TestCase):
     def test_cancelled_draft_cannot_be_approved(self):
         self.store.get(self.p['proposal_id'],human_identity_id=self.human,cancel=True)
         self.assertEqual(self.run_route(lambda _:self.fail('IPC must not be called')).status_code,409)
+    def test_revoke_requires_session_and_preserves_exact_binding(self):
+        self.body['confirmation']='REVOKE_EXACT_APPROVAL'
+        self.assertEqual(self.run_route(lambda _:self.fail('No IPC'),False,'DELETE').status_code,401)
+        def revoke(intent):
+            self.assertEqual(intent['operation'],'revoke_exact_approval')
+            return {'status':'revoked','approval':{'proposal_id':self.p['proposal_id'],'action_digest':self.p['action_digest'],'human_identity_id':self.human,'subject_identity_id':self.agent,'execution_allowed':False}}
+        self.assertEqual(self.run_route(revoke,True,'DELETE').status_code,200)
+        self.assertEqual(self.store.get(self.p['proposal_id'],human_identity_id=self.human)['state'],'APPROVAL_REVOKED')
     def test_claim_prevents_cancellation_and_uncertain_resubmission(self):
         def uncertain(intent):
             with self.assertRaises(FileExistsError):self.store.get(self.p['proposal_id'],human_identity_id=self.human,cancel=True)
