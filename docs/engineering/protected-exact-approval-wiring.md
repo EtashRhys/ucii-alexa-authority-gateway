@@ -26,3 +26,10 @@ Installer backs up and validates nginx, installs the exact approvals route, and 
 The earlier cancelled test proposal stays cancelled. The gateway/server.py hash used earlier is a test binding fixture, not a deployable application artifact. No executor or Alexa+ conversation is enabled. Every response continues execution_allowed=false.
 
 Remaining before execution: exact approval revocation, fresh credential/evidence checks, authoritative execution-time reservation, artifact/resource enforcement, uncertain execution reconciliation and immutable receipt. Broader device step-up and actual Alexa+ transport remain separate integration work.
+
+
+## Revocation update
+
+DELETE /auth/approvals requires explicit REVOKE_EXACT_APPROVAL, current HUMAN session, proposal ID and matching digest. Protected custody independently verifies HUMAN/controller and selects the owner/product/agent/proposal-bound UCII row. It revokes only ACTIVE, unused, unexpired approval; expired or RESERVED records remain unchanged. No root issuance permit is needed for removal of an existing owner-bound approval. A repeated revoked result does not mutate or restore authority. Draft state becomes APPROVAL_REVOKED. Website offers Revoke exact approval only with retrieved, unexpired ACTIVE evidence. Status now derives EXPIRED on the server without altering retained ACTIVE rows; reservation enforces the stored expiry independently.
+
+Owner live issuance and expiry accepted for 9ca0fb94-4db5-4b55-8956-f2faece26dcf. Local 34 tests pass; live revocation acceptance pending. Installer readiness now sends required proposal UUID and expects 401. Execution stays disabled.
