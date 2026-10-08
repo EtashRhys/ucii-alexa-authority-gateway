@@ -163,6 +163,64 @@ async def ucii_agent_verify() -> dict:
         "authority": "not evaluated",
     }
 
+
+@mcp.tool()
+async def ucii_authority_check(operation: str) -> dict:
+    """Read actual delegated operation authority; never grant or execute it."""
+    import asyncio
+    import base64
+    import json
+    import re
+    import secrets
+    from uuid import UUID
+    if not isinstance(operation, str) or not re.fullmatch(r"[A-Za-z][A-Za-z0-9_.:-]{0,127}", operation):
+        raise ValueError("Supply one exact logical operation")
+    identity_id = str(UUID(os.environ["UCII_ALEXA_AGENT_ID"]))
+    fingerprint = os.environ["UCII_ALEXA_AGENT_FINGERPRINT"]
+    if not re.fullmatch(r"[0-9a-f]{64}", fingerprint):
+        raise ValueError("Agent credential binding is invalid")
+    message = json.dumps({
+        "purpose": "ucii-alexa-delegated-operation-check-v1",
+        "identity_id": identity_id, "operation": operation,
+        "nonce": secrets.token_urlsafe(32),
+        "issued_at": datetime.now(timezone.utc).isoformat(),
+    }, sort_keys=True, separators=(",", ":"))
+    signature = base64.b64encode(
+        await asyncio.to_thread(_agent_sign, message.encode("utf-8"))
+    ).decode("ascii")
+    async with httpx.AsyncClient(timeout=20, follow_redirects=False) as client:
+        response = await client.post(
+            "http://127.0.0.1:8000/v1/authorization/delegated/check",
+            json={"identity_id": identity_id, "credential_fingerprint": fingerprint,
+                  "operation": operation, "message": message, "signature": signature},
+        )
+    response.raise_for_status()
+    result = response.json()
+    state = result.get("authority_state")
+    active = state == "ACTIVE"
+    authority_id = result.get("authority_id")
+    if (
+        result.get("identity_id") != identity_id
+        or result.get("credential_fingerprint") != fingerprint
+        or result.get("operation") != operation
+        or result.get("credential_status") != "ACTIVE"
+        or result.get("executed") is not False
+        or state not in {"ACTIVE", "NOT_GRANTED", "REVOKED", "EXPIRED", "INVALID"}
+        or result.get("authorized") is not active
+        or (active and (not isinstance(authority_id, str) or not authority_id.strip()))
+        or (not active and authority_id is not None)
+    ):
+        raise ValueError("UCII authority response did not match the signed operation")
+    return {
+        "operation": operation, "identity_id": identity_id,
+        "credential_fingerprint": fingerprint,
+        "operation_authorized": active, "authority_state": state,
+        "authority_id": authority_id, "executed": False,
+        "execution_allowed": False, "evaluation_scope": "operation only",
+        "resource_evaluated": False, "environment_evaluated": False,
+        "checked_at": datetime.now(timezone.utc).isoformat(),
+    }
+
 from auth import install_auth_routes
 install_auth_routes(mcp, _agent_sign)
 
