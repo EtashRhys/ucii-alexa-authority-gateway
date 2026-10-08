@@ -278,3 +278,12 @@ The website keeps a previously retrieved active authority record reference separ
 - Owner cancelled the saved proposal and retrieved it again; state remained CANCELLED with the same expiry. Approval remained NOT_ESTABLISHED and execution stayed blocked.
 - These observations confirm the live storage/HTTPS/website proposal path. The installer terminal output and full new Oracle test run were not supplied, so no additional terminal acceptance is asserted.
 - Reinspection confirmed UCII's existing operation-scoped authority model lacks exact-action binding and execution-use consumption. Protected Just this time approval requires core enforcement; a proposal hash or UI confirmation alone cannot substitute for it. Live schema inspection precedes that change.
+
+
+### 2026-10-08 — Live schema confirmed; exact-action UCII primitive tested
+
+- Owner's read-only SQLite schema output confirms existing operation authority, HUMAN governance/step-up and controller tables, with no exact-action approval/use table. Existing components were inspected before extending authority persistence.
+- Added a dedicated model/service to UCII, without installing a route, executing DDL or touching existing identities, credentials, standing grants or controller custody.
+- The trusted-side primitive stores independently established exact approval, reserves its single use with an atomic matching update, records a reconciled execution receipt, and revokes unused approval. It does not authenticate or establish approval. Product, HUMAN, agent subject and full canonical action must match; validity is bounded to five minutes.
+- Nine isolated actual SQLAlchemy/temporary-SQLite tests passed locally. Parallel reservation had one winner; expired/not-yet-valid, altered scope, wrong product/HUMAN, duplicate issuance and replay were blocked. RESERVED state cannot be silently released after uncertain effects.
+- UCII checkpoint `8a2b35c5d3bc38be81337d7f550b1f1f46c5b6e7` includes source, tests and an explicit protected-integration contract. Oracle test execution, narrowly scoped migration, protected approval composition and executor remain pending. No Just this time success or production readiness is claimed.
