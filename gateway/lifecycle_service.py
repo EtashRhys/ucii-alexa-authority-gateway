@@ -51,7 +51,7 @@ class AlexaLifecycleDaemon(ProtectedControllerLifecycleDaemon):
             raise ValueError("HUMAN identity mismatch")
 
     def handle_request(self, request):
-        if isinstance(request, dict) and request.get('operation') in ('approve_exact_action', 'exact_approval_status'):
+        if isinstance(request, dict) and request.get('operation') in ('approve_exact_action', 'exact_approval_status', 'revoke_exact_approval'):
             try:
                 from exact_approval import handle
                 return handle(self, request)
