@@ -1,4 +1,5 @@
 """Alexa-only lifecycle composition: HUMAN session plus root-controlled permit."""
+print("Alexa lifecycle runtime loading", flush=True)
 import json
 import os
 from pathlib import Path
@@ -8,7 +9,9 @@ from pq_auth.auth import models as _auth_models
 from pq_auth.config import SessionLocal
 from ucii_agents.controller_lifecycle_credentials import load_controller_lifecycle_credential
 from ucii_agents.controller_lifecycle_service import controller_lifecycle_ipc_group_gid
-from ucii_agents.controller_lifecycle_daemon import ProtectedControllerLifecycleDaemon
+from ucii_agents.controller_lifecycle_daemon import (
+    ProtectedControllerLifecycleDaemon, ControllerLifecycleDaemonError,
+)
 from ucii_agents.controller_lifecycle_authorization import (
     load_controller_lifecycle_grant_authorization,
     load_controller_lifecycle_authorization,
@@ -21,6 +24,20 @@ from ucii_agents.provenance_recorder import ProvenanceRecorder
 
 
 class AlexaLifecycleDaemon(ProtectedControllerLifecycleDaemon):
+    def _open_server(self):
+        server = super()._open_server()
+        print("Alexa lifecycle socket ready", flush=True)
+        return server
+
+    def _serve_connection(self, connection):
+        connection.settimeout(10)
+        try:
+            super()._serve_connection(connection)
+        except (ControllerLifecycleDaemonError, OSError):
+            # Empty, oversized, timed-out or disconnected clients are local failures.
+            # A failed request must not stop the custody service.
+            return
+
     def verify_human(self, token):
         if not isinstance(token, str) or not token or len(token) > 8192:
             raise ValueError("HUMAN session required")
