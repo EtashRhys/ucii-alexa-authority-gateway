@@ -233,3 +233,14 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - Completed live operation-authority sequence: initial NOT_GRANTED/DENIED, committed standing grant reconciled, ACTIVE check, exact-record revocation, fresh REVOKED/DENIED.
 - One-minute evidence expiry cleared the record reference needed to open revocation, forcing navigation within a minute. This is a UX defect; a stable record reference may be retained separately from fresh authorization evidence while protected revocation independently rechecks actual state. Fix remains pending.
 - Exact-action resource/environment constraints, protected executor, conversation integration, authoritative activity and product entitlement isolation remain pending. This milestone does not establish full production readiness.
+
+
+## Selectable sign-in duration and revocation record references — 2026-10-08
+
+**Friction:** The fixed 15-minute gateway session interrupted owner testing. Merely extending the browser cookie would not work: UCII's current authentication token expires after one hour. Separately, expiring a one-minute authority check removed the record reference needed to open the revocation review.
+
+**Change:** Sign-in offers 15 minutes, 1 hour (selected initially), or 4 hours. The gateway enforces an absolute chosen deadline. A bounded background task rotates UCII tokens before expiry, including while the browser is closed, and serializes rotation with session checks and authority requests. Passwords are never saved for renewal. Sign-out, eviction and deadline expiry remove the opaque session and cancel renewal. A failed or ambiguous rotation discards the session rather than retrying a potentially consumed token. Gateway restarts still require sign-in.
+
+The website keeps a previously retrieved active authority record reference separately from fresh permission evidence. It remains available for revocation review after the check expires; it never enables execution. Sign-out and confirmed revocation clear the reference. The protected service independently checks the authenticated HUMAN and actual record when confirmation is submitted.
+
+**Validation:** Eight isolated gateway tests passed against a mock UCII HTTP boundary: allowed deadlines, invalid durations, expiry, logout, background rotation with unchanged deadline, rotation failure, concurrent session validation during rotation, and unauthenticated authority rejection. Website TypeScript validation passed. These tests do not claim a completed four-hour live retention test. Oracle must pull the new gateway code, run the tests and restart, then the owner should sign in with a selected duration and verify the displayed expiry. No new authority was granted or revoked for this change.
