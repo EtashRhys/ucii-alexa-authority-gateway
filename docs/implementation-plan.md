@@ -242,7 +242,20 @@ The one-use limit applies to grant issuance authorization, not execution of the 
 - [x] Reuse UCII token refresh behind the gateway; serialize rotation and protected authority requests without storing passwords or changing action authority.
 - [x] Validate eight isolated gateway session tests and website TypeScript checks.
 - [x] Separate the last retrieved active authority record reference from the one-minute permission check so revocation review remains accessible.
-- [ ] Pull and restart the Oracle gateway; verify selected expiry and sign-out through the hosted website.
+- [x] Pull and restart the Oracle gateway; eight session tests passed on Oracle and the owner confirmed a four-hour hosted expiry (sign-in about 17:12, expiry 21:12 America/Toronto on 2026-10-08). Existing hosted sign-out acceptance remains recorded above.
 - [ ] Observe live token renewal and retention beyond one hour for the four-hour option. A restart or failed renewal ends the in-memory session early.
 
 The next execution milestone still requires exact resource/environment binding and a protected executor. The previously revoked operation authority remains revoked; these login changes do not recreate it.
+
+
+### Next bounded wiring slice: canonical action and one-time approval
+
+- [x] Define immutable canonical action representation with server-derived UCII agent identity, exact operation, resource, environment and artifact digest.
+- [x] Require an immutable SHA-256 artifact digest for infrastructure.deploy; mutable labels such as latest/main are not exact deployment targets.
+- [x] Test deterministic encoding, changed-field bindings, malformed scope, immutable proposals and rejection of browser-supplied subject/approval fields (six local tests passed).
+- [ ] Run canonical-action tests on Oracle. This module is not yet connected to a live route or executor.
+- [ ] Wire the existing draft UI to capture an exact deployment artifact and create a server-side proposal identifier/digest. A digest is request identity, never permission.
+- [ ] Implement protected HUMAN approval for the stored exact proposal with short validity and one-use limits; reuse UCII identity, credential and controller boundaries. Do not reuse the already consumed standing-grant permit.
+- [ ] Enforce the exact proposal binding, current UCII authority, expiry and atomic usage at the protected executor. Resource/environment approval is not established by today's operation-only delegated API.
+
+The original operation-authority record remains revoked. Canonical encoding alone does not authorize, deploy, mint authority or constitute production acceptance.
