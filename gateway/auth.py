@@ -12,7 +12,16 @@ import httpx
 from starlette.responses import JSONResponse
 
 _HEADERS = {"Cache-Control": "no-store"}
-_SESSION_SECONDS = 900
+_SESSION_MINUTES = (15, 60, 240)
+
+
+def _token_expiry(token):
+    # Scheduling hint only; UCII independently verifies identity and signature.
+    payload = token.split(".")[1]
+    value = json.loads(base64.urlsafe_b64decode(payload + "=" * (-len(payload) % 4)))["exp"]
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not 0 < value < 10**12:
+        raise ValueError("Invalid token expiry")
+    return value
 
 
 
@@ -46,7 +55,46 @@ def install_auth_routes(mcp, sign):
         now = time.monotonic()
         for key in list(sessions):
             if sessions[key]["deadline"] <= now:
-                del sessions[key]
+                discard(key)
+
+    def discard(handle):
+        entry = sessions.pop(handle, None)
+        if entry and entry.get("renewal") and entry["renewal"] is not asyncio.current_task():
+            entry["renewal"].cancel()
+
+    async def renew(handle, entry):
+        # Renew even with a closed browser. Never extend the chosen deadline.
+        try:
+            while sessions.get(handle) is entry:
+                delay = min(entry["token_expiry"] - time.time() - 300,
+                            entry["deadline"] - time.monotonic())
+                await asyncio.sleep(max(0, delay))
+                async with entry["lock"]:
+                    if sessions.get(handle) is not entry:
+                        return
+                    if entry["deadline"] <= time.monotonic():
+                        discard(handle)
+                        return
+                    await resolve(entry["token"])
+                    async with httpx.AsyncClient(timeout=30, follow_redirects=False) as client:
+                        response = await client.post(
+                            "http://127.0.0.1:8000/v1/auth/refresh",
+                            json={"token": entry["token"]},
+                        )
+                    response.raise_for_status()
+                    token = response.json()["access_token"]
+                    await resolve(token)
+                    expiry = _token_expiry(token)
+                    if expiry <= time.time() + 300:
+                        raise ValueError("Renewal lifetime too short")
+                    if sessions.get(handle) is not entry:
+                        return
+                    entry.update(token=token, token_expiry=expiry)
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            # Ambiguous refresh cannot be retried with a consumed token.
+            discard(handle)
 
     async def resolve(token):
         async with httpx.AsyncClient(timeout=30, follow_redirects=False) as client:
@@ -96,7 +144,10 @@ def install_auth_routes(mcp, sign):
             return reply({"message": "Login request too large."}, 413)
         try:
             body = json.loads(raw)
-            if not isinstance(body, dict) or set(body) != {"email", "password"}:
+            if not isinstance(body, dict) or set(body) not in ({"email", "password"}, {"email", "password", "duration_minutes"}):
+                raise ValueError()
+            minutes = body.get("duration_minutes", 15)
+            if isinstance(minutes, bool) or not isinstance(minutes, int) or minutes not in _SESSION_MINUTES:
                 raise ValueError()
             if not all(isinstance(body[k], str) and body[k] for k in ("email", "password")):
                 raise ValueError()
@@ -108,7 +159,8 @@ def install_auth_routes(mcp, sign):
             presentation = await economic_proof()
             async with httpx.AsyncClient(timeout=120, follow_redirects=False) as client:
                 response = await client.post(
-                    "http://127.0.0.1:8000/v1/auth/login", json=body,
+                    "http://127.0.0.1:8000/v1/auth/login",
+                    json={key: body[key] for key in ("email", "password")},
                     headers={"x-ucii-service-entitlement": presentation},
                 )
             if response.status_code == 401:
@@ -120,13 +172,15 @@ def install_auth_routes(mcp, sign):
             await resolve(token)
             prune()
             if len(sessions) >= 32:
-                del sessions[next(iter(sessions))]
+                discard(next(iter(sessions)))
             handle = secrets.token_urlsafe(32)
-            expires = datetime.now(timezone.utc) + timedelta(seconds=_SESSION_SECONDS)
+            expires = datetime.now(timezone.utc) + timedelta(minutes=minutes)
             sessions[handle] = {
-                "token": token, "deadline": time.monotonic() + _SESSION_SECONDS,
+                "token": token, "deadline": time.monotonic() + minutes * 60,
                 "expires_at": expires.isoformat(),
+                "token_expiry": _token_expiry(token), "lock": asyncio.Lock(),
             }
+            sessions[handle]["renewal"] = asyncio.create_task(renew(handle, sessions[handle]))
             return reply({
                 "session": handle, "identity_id": os.environ["UCII_ALEXA_HUMAN_ID"],
                 "authentication": "AUTHENTICATED", "expires_at": expires.isoformat(),
@@ -143,14 +197,19 @@ def install_auth_routes(mcp, sign):
         if not separator or scheme.lower() != "bearer" or handle not in sessions:
             return reply({"message": "Authentication required."}, 401)
         if request.method == "DELETE":
-            del sessions[handle]
+            discard(handle)
             return reply({"authentication": "SIGNED_OUT"})
         entry = sessions[handle]
         try:
-            await resolve(entry["token"])
+            async with entry["lock"]:
+                if sessions.get(handle) is not entry or entry["deadline"] <= time.monotonic():
+                    return reply({"message": "Session expired. Sign in again."}, 401)
+                await resolve(entry["token"])
+                if sessions.get(handle) is not entry or entry["deadline"] <= time.monotonic():
+                    return reply({"message": "Session expired. Sign in again."}, 401)
         except httpx.HTTPStatusError as error:
             if error.response.status_code == 401:
-                sessions.pop(handle, None)
+                discard(handle)
                 return reply({"message": "Session expired. Sign in again."}, 401)
             return reply({"message": "UCII session check unavailable."}, 503)
         except Exception:
@@ -207,37 +266,41 @@ def install_auth_routes(mcp, sign):
                 raise ValueError()
         except (ValueError, TypeError, KeyError):
             return reply({"message": "Review and explicitly confirm one operation authority change."}, 400)
-        try:
-            await resolve(entry["token"])
-            if sessions.get(handle) is not entry or entry["deadline"] <= time.monotonic():
-                return reply({"message": "Session expired. Sign in again."}, 401)
-        except Exception:
-            return reply({"message": "HUMAN session could not be verified. No lifecycle request sent."}, 401)
-        try:
-            result = await asyncio.to_thread(_lifecycle_exchange, {**intent, "human_token": entry["token"]})
-            if result.get("status") == "denied":
-                return reply({"message": "Protected approval requires a matching, unused operator authorization. No successful change confirmed."}, 403)
-            expected = "granted" if command == "grant" else "revoked"
-            state = "ACTIVE" if command == "grant" else "REVOKED"
-            if (
-                result.get("status") != expected
-                or result.get("identity_id") != os.environ["UCII_ALEXA_AGENT_ID"]
-                or result.get("authority_state") != state
-                or not isinstance(result.get("authority_id"), str)
-                or (command == "grant" and (
-                    result.get("allowed_operations") != [body["operation"]]
-                    or result.get("granted_by") != os.environ["UCII_ALEXA_HUMAN_ID"]
-                ))
-                or (command == "revoke" and result.get("authority_id") != intent["authority_id"])
-            ):
-                raise ValueError()
-            # Return public lifecycle metadata only.
-            return reply({
-                key: result[key] for key in (
-                    "status", "authority_id", "identity_id", "authority_state",
-                    "allowed_operations", "granted_by",
-                ) if key in result
-            })
-        except Exception:
-            # A timeout after sending may mean mutation committed: never auto-retry.
-            return reply({"message": "Authority change outcome uncertain. Check authority before retrying."}, 503)
+        async with entry["lock"]:
+            try:
+                if sessions.get(handle) is not entry or entry["deadline"] <= time.monotonic():
+                    return reply({"message": "Session expired. Sign in again."}, 401)
+                await resolve(entry["token"])
+                if sessions.get(handle) is not entry or entry["deadline"] <= time.monotonic():
+                    return reply({"message": "Session expired. Sign in again."}, 401)
+            except Exception:
+                return reply({"message": "HUMAN session could not be verified. No lifecycle request sent."}, 401)
+            try:
+                result = await asyncio.to_thread(_lifecycle_exchange, {**intent, "human_token": entry["token"]})
+                if result.get("status") == "denied":
+                    return reply({"message": "Protected approval requires a matching, unused operator authorization. No successful change confirmed."}, 403)
+                expected = "granted" if command == "grant" else "revoked"
+                state = "ACTIVE" if command == "grant" else "REVOKED"
+                if (
+                    result.get("status") != expected
+                    or result.get("identity_id") != os.environ["UCII_ALEXA_AGENT_ID"]
+                    or result.get("authority_state") != state
+                    or not isinstance(result.get("authority_id"), str)
+                    or (command == "grant" and (
+                        result.get("allowed_operations") != [body["operation"]]
+                        or result.get("granted_by") != os.environ["UCII_ALEXA_HUMAN_ID"]
+                    ))
+                    or (command == "revoke" and result.get("authority_id") != intent["authority_id"])
+                ):
+                    raise ValueError()
+                # Return public lifecycle metadata only.
+                return reply({
+                    key: result[key] for key in (
+                        "status", "authority_id", "identity_id", "authority_state",
+                        "allowed_operations", "granted_by",
+                    ) if key in result
+                })
+            except Exception:
+                # A timeout after sending may mean mutation committed: never auto-retry.
+                return reply({"message": "Authority change outcome uncertain. Check authority before retrying."}, 503)
+
