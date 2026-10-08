@@ -15,6 +15,26 @@ _HEADERS = {"Cache-Control": "no-store"}
 _SESSION_SECONDS = 900
 
 
+
+def _lifecycle_exchange(intent):
+    import socket
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
+        client.settimeout(35)
+        client.connect("/run/ucii-alexa-lifecycle/lifecycle.sock")
+        client.sendall((json.dumps(intent) + "\n").encode("utf-8"))
+        raw = b""
+        while b"\n" not in raw:
+            chunk = client.recv(4096)
+            if not chunk:
+                break
+            raw += chunk
+            if len(raw) > 16384:
+                raise ValueError("Response exceeded bound")
+    result = json.loads(raw.split(b"\n", 1)[0])
+    if not isinstance(result, dict):
+        raise ValueError("Invalid lifecycle response")
+    return result
+
 def install_auth_routes(mcp, sign):
     sessions = {}
     attempts = deque()
@@ -140,3 +160,84 @@ def install_auth_routes(mcp, sign):
             "authentication": "AUTHENTICATED",
             "expires_at": entry["expires_at"],
         })
+
+
+    @mcp.custom_route("/auth/authority", methods=["POST"])
+    async def authority(request):
+        prune()
+        scheme, separator, handle = request.headers.get("authorization", "").partition(" ")
+        if not separator or scheme.lower() != "bearer" or handle not in sessions:
+            return reply({"message": "Authentication required."}, 401)
+        entry = sessions[handle]
+        try:
+            raw = await request.body()
+            if len(raw) > 4096:
+                raise ValueError()
+            body = json.loads(raw)
+            if not isinstance(body, dict):
+                raise ValueError()
+            command = body.get("command")
+            if command == "grant":
+                import re
+                if set(body) != {"command", "operation", "confirmation"}:
+                    raise ValueError()
+                if body["confirmation"] != "GRANT_OPERATION_AUTHORITY":
+                    raise ValueError()
+                if not isinstance(body["operation"], str) or not re.fullmatch(r"[A-Za-z][A-Za-z0-9_.:-]{0,127}", body["operation"]):
+                    raise ValueError()
+                intent = {
+                    "version": "ucii-controller-lifecycle-v1",
+                    "operation": "grant_delegated_authority",
+                    "allowed_operations": [body["operation"]],
+                    "granted_by": os.environ["UCII_ALEXA_HUMAN_ID"],
+                }
+            elif command == "revoke":
+                from uuid import UUID
+                if set(body) != {"command", "authority_id", "confirmation"}:
+                    raise ValueError()
+                if body["confirmation"] != "REVOKE_OPERATION_AUTHORITY":
+                    raise ValueError()
+                intent = {
+                    "version": "ucii-controller-lifecycle-v1",
+                    "operation": "revoke_delegated_authority",
+                    "authority_id": str(UUID(body["authority_id"])),
+                    "reason": "human_requested_revocation",
+                }
+            else:
+                raise ValueError()
+        except (ValueError, TypeError, KeyError):
+            return reply({"message": "Review and explicitly confirm one operation authority change."}, 400)
+        try:
+            await resolve(entry["token"])
+            if sessions.get(handle) is not entry or entry["deadline"] <= time.monotonic():
+                return reply({"message": "Session expired. Sign in again."}, 401)
+        except Exception:
+            return reply({"message": "HUMAN session could not be verified. No lifecycle request sent."}, 401)
+        try:
+            result = await asyncio.to_thread(_lifecycle_exchange, {**intent, "human_token": entry["token"]})
+            if result.get("status") == "denied":
+                return reply({"message": "Protected approval requires a matching, unused operator authorization. No successful change confirmed."}, 403)
+            expected = "granted" if command == "grant" else "revoked"
+            state = "ACTIVE" if command == "grant" else "REVOKED"
+            if (
+                result.get("status") != expected
+                or result.get("identity_id") != os.environ["UCII_ALEXA_AGENT_ID"]
+                or result.get("authority_state") != state
+                or not isinstance(result.get("authority_id"), str)
+                or (command == "grant" and (
+                    result.get("allowed_operations") != [body["operation"]]
+                    or result.get("granted_by") != os.environ["UCII_ALEXA_HUMAN_ID"]
+                ))
+                or (command == "revoke" and result.get("authority_id") != intent["authority_id"])
+            ):
+                raise ValueError()
+            # Return public lifecycle metadata only.
+            return reply({
+                key: result[key] for key in (
+                    "status", "authority_id", "identity_id", "authority_state",
+                    "allowed_operations", "granted_by",
+                ) if key in result
+            })
+        except Exception:
+            # A timeout after sending may mean mutation committed: never auto-retry.
+            return reply({"message": "Authority change outcome uncertain. Check authority before retrying."}, 503)
