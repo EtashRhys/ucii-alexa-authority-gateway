@@ -226,3 +226,10 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - TypeScript and production build passed; private publication succeeded.
 - Five isolated scenarios using the actual custody class passed with controlled dependencies: missing HUMAN proof, rejected permit, post-consumption exception, post-consumption denial, and successful mutation response. These are response-boundary tests, not live mutation acceptance.
 - Custody outcome hardening is committed for Oracle installation. Actual revocation and subsequent signed REVOKED/DENIED acceptance remain pending.
+
+
+### 2026-10-08 — Hosted revocation lifecycle accepted
+- Owner confirmed exact-record revoke review, successful UCII revoked response, and subsequent fresh signed infrastructure.deploy check returning REVOKED / DENIED. HUMAN login and identities persisted. No execution occurred.
+- Completed live operation-authority sequence: initial NOT_GRANTED/DENIED, committed standing grant reconciled, ACTIVE check, exact-record revocation, fresh REVOKED/DENIED.
+- One-minute evidence expiry cleared the record reference needed to open revocation, forcing navigation within a minute. This is a UX defect; a stable record reference may be retained separately from fresh authorization evidence while protected revocation independently rechecks actual state. Fix remains pending.
+- Exact-action resource/environment constraints, protected executor, conversation integration, authoritative activity and product entitlement isolation remain pending. This milestone does not establish full production readiness.
