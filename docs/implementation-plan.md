@@ -269,7 +269,16 @@ The original operation-authority record remains revoked. Canonical encoding alon
 - [x] Preserve a device-local proposal reference for retrieval after reload; this reference never establishes approval or execution authority.
 - [x] Pass 23 isolated tests across sessions, canonical actions and persistent proposals; pass website TypeScript and production build.
 - [ ] Install the private state directory and exact HTTPS proposal route on Oracle using deploy/install_proposals.py, and rerun tests there.
-- [ ] Verify owner can save, retrieve after reload and cancel the same hosted proposal; edits must require a new saved snapshot.
+- [x] Owner verified hosted save, reload/retrieve with unchanged expiry, cancel, and subsequent retrieval returning CANCELLED (2026-10-08). Changed-draft/new-snapshot live acceptance remains pending.
 - [ ] Verify live session renewal after the installation restart and new sign-in.
 
 Proposal storage is application draft state, not an alternative UCII authority database. Every record reports approval NOT_ESTABLISHED and execution_allowed false. Protected one-use approval and the executor remain the next dependent steps.
+
+
+### Protected one-time approval: current implementation boundary
+
+Hosted proposal save/reload/cancel acceptance is complete. A proposal is still application draft state and cannot be promoted to permission by a browser flag or confirmation response.
+
+Source reinspection of UCII ActionAuthority and its lifecycle service confirms the currently implemented delegation is operation-scoped with optional expiry; it does not contain an exact-action digest or atomic execution-use counter. Existing HUMAN step-up/lifecycle evidence concerns grant/revoke ceremonies, not an exact deployment receipt.
+
+Next bounded change: inspect the live UCII schema read-only, then add narrowly scoped exact-action approval persistence and atomic reservation/consumption inside UCII, composed through the dedicated protected Alexa approval boundary. Preserve existing standing authority and historical revoked records. No executor or successful Just this time approval is claimed yet.
