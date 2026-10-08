@@ -303,3 +303,16 @@ UCII source checkpoint: `8a2b35c5d3bc38be81337d7f550b1f1f46c5b6e7`. See UCII doc
 - UCII migration script committed and locally verified against temporary SQLite.
 - Next owner step: activate only exact_action_approvals with the backed-up migration.
 - Then connect protected HUMAN confirmation to the exact stored proposal and a separately bounded issuance permit. No live exact approval or executor is enabled yet.
+
+
+### Exact confirmation implementation checkpoint
+
+- [x] Owner verified live exact approval table activation with private backup.
+- [x] Protected HUMAN session/controller/exact permit confirmation implemented.
+- [x] Draft claim and authoritative status reconciliation implemented; 31 local tests pass.
+- [x] Website Just this time and Check exact approval wired; TypeScript passes.
+- [ ] Oracle approval route/service deployment and tests.
+- [ ] Owner end-to-end one-use exact approval acceptance.
+- [ ] Exact approval revocation and protected executor integration.
+
+Execution remains blocked. See docs/engineering/protected-exact-approval-wiring.md for precise gates and pending evidence.
