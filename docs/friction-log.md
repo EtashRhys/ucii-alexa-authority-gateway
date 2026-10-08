@@ -192,3 +192,12 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - Controller custody conversion initially failed because decryption inferred the artifact filename instead of its embedded credential name. Supplying the original systemd credential name resolved it; no state changed during failed attempts.
 - Owner confirmed the saved Alexa controller authority verifies against UCII and a canonical encrypted lifecycle credential was prepared. No controller rotation, grant or revocation occurred.
 - Dedicated Alexa lifecycle service and authenticated grant/revoke controls remain pending.
+
+
+### 2026-10-08 — Isolated protected approval boundary
+- Dedicated Alexa lifecycle service uses Alexa's encrypted controller credential and the existing UCII database access group.
+- A connect-only readiness probe exposed an inherited empty-request crash. Alexa wrapper now bounds socket reads and isolates empty, oversized, timed-out and disconnected clients without stopping the service. Observed startup took about 33 seconds; readiness checks use the socket artifact and explicit ready log.
+- Owner confirmed a grant lacking HUMAN authentication returns DENIED.
+- Added non-MCP /auth/authority gateway route for explicit grant/revoke confirmation. It resolves the HUMAN session, passes the server-held UCII token only over local IPC, and verifies public mutation metadata.
+- Protected custody independently validates that HUMAN token with UCII and consumes a matching root-owned one-use lifecycle authorization before invoking UCII's controller/authority primitives.
+- Python compilation passed. Gateway route live acceptance, root operator authorization preparation, HTTPS routing and website approval UI remain pending. Operation grants are standing authority; expiry of an issuance permit must not be presented as expiry or single-use execution of the granted authority.
