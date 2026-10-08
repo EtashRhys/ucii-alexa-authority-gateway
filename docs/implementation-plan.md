@@ -316,3 +316,13 @@ UCII source checkpoint: `8a2b35c5d3bc38be81337d7f550b1f1f46c5b6e7`. See UCII doc
 - [ ] Exact approval revocation and protected executor integration.
 
 Execution remains blocked. See docs/engineering/protected-exact-approval-wiring.md for precise gates and pending evidence.
+
+
+### Exact approval revocation checkpoint
+
+- [x] Oracle previous 31 tests passed.
+- [x] Owner verified exact approval ACTIVE then expiry display; execution stayed blocked.
+- [x] Owner-bound protected exact revocation implemented; 34 local tests pass.
+- [x] Installer readiness check corrected; historical approval label clarified.
+- [ ] Oracle update and live unused exact approval revocation test.
+- [ ] Protected execution integration remains blocked.
