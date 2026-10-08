@@ -1,0 +1,31 @@
+[Unit]
+Description=UCII Alexa Protected Controller Lifecycle
+After=network.target ucii.service
+
+[Service]
+Type=simple
+User=ucii-alexa-lifecycle
+Group=ucii-alexa-lifecycle-ipc
+SupplementaryGroups=ucii-database
+WorkingDirectory=/
+Environment=PYTHONPATH=/opt/ucii/UCII/src
+Environment=DATABASE_URL=sqlite:////var/lib/ucii/database/pq_auth.db
+Environment=DEBUG=False
+Environment=UCII_CONTROLLER_LIFECYCLE_SOCKET_PATH=/run/ucii-alexa-lifecycle/lifecycle.sock
+Environment=UCII_CONTROLLER_LIFECYCLE_IPC_GROUP=ucii-alexa-lifecycle-ipc
+LoadCredentialEncrypted=alexa-agent-controller:/etc/ucii-alexa-authority/agent-controller-authority.cred
+ExecStart=/opt/ucii/UCII/.venv/bin/python -c "from pq_auth.auth import models; from ucii_agents.controller_lifecycle_service import build_controller_lifecycle_daemon; build_controller_lifecycle_daemon(credential_name='alexa-agent-controller').serve_forever()"
+RuntimeDirectory=ucii-alexa-lifecycle
+RuntimeDirectoryMode=0750
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/ucii/database
+RestrictAddressFamilies=AF_UNIX
+UMask=0007
+
+[Install]
+WantedBy=multi-user.target
