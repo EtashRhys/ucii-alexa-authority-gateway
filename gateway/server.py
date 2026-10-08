@@ -163,5 +163,8 @@ async def ucii_agent_verify() -> dict:
         "authority": "not evaluated",
     }
 
+from auth import install_auth_routes
+install_auth_routes(mcp, _agent_sign)
+
 if __name__ == "__main__":
     mcp.run(transport="streamable-http")
