@@ -292,3 +292,8 @@ The website keeps a previously retrieved active authority record reference separ
 ## Exact approval table activation checkpoint — 2026-10-08
 
 Owner confirmed all nine UCII exact-action approval tests passed on Oracle at 8a2b35c. Tests used temporary SQLite, not the live database. The explicit scripts/install_exact_action_approval.py migration is committed in UCII: it makes a private online SQLite backup, creates only exact_action_approvals, and stops if the table already exists. Local temporary-database verification confirmed preserved identity data, foreign keys, empty approvals, and repeat protection. Live migration is awaiting the owner command. No exact approval is issued by this migration; protected confirmation and execution remain unwired.
+
+
+## Exact confirmation wiring — 2026-10-08
+
+Owner confirmed live approval table activation and backup at 90527da. New protected confirmation wiring, exact issuance permit preparation, HTTPS installer and status reconciliation are committed. Local 31 tests passed; website TypeScript passed. A draft claim now prevents approval/cancellation races. Uncertain outcomes require UCII status retrieval; duplicate issuance cannot create another use. Root exact permits remain separate from standing authority permits. Oracle deployment/acceptance is pending; no live exact approval or execution is claimed. See docs/engineering/protected-exact-approval-wiring.md.
