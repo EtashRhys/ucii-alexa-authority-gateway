@@ -13,9 +13,10 @@ PRODUCT = 'ucii-alexa'
 SCHEMA = 'ucii-alexa-exact-approval-issuance-v1'
 
 
-def public(row):
+def public(row, now=None):
+    state = "EXPIRED" if row.state == "ACTIVE" and row.expires_at <= (datetime.now(timezone.utc) if now is None else now).replace(tzinfo=None) else row.state
     return {'approval_id': row.id, 'proposal_id': row.proposal_id,
-            'action_digest': row.action_digest, 'state': row.state,
+            'action_digest': row.action_digest, 'state': state,
             'expires_at': row.expires_at.replace(tzinfo=timezone.utc).isoformat(),
             'human_identity_id': row.human_identity_id,
             'subject_identity_id': row.subject_identity_id,
@@ -43,10 +44,22 @@ def handle(daemon, request, *, permit_directory=Path('/etc/ucii-alexa-lifecycle'
         row = db.query(ExactActionApproval).filter_by(product_id=PRODUCT,
             proposal_id=proposal_id, human_identity_id=human,
             subject_identity_id=daemon.identity_id).first()
+        if request['operation'] == 'revoke_exact_approval':
+            if set(request) != {'version', 'operation', 'proposal_id', 'human_token'} or not row:
+                raise ValueError('Exact approval not found')
+            if row.state == 'REVOKED':
+                return {'status':'revoked','approval':public(row, current)}
+            if row.state != 'ACTIVE' or row.expires_at <= current.replace(tzinfo=None):
+                return {'status':'checked','approval':public(row, current)}
+            changed = ExactActionApprovalService.revoke(db, approval_id=row.id,
+                human_identity_id=human, reason='human_requested_exact_revocation',
+                now=current.replace(tzinfo=None))
+            db.refresh(row)
+            return {'status':'revoked' if changed else 'checked','approval':public(row, current)}
         if request['operation'] == 'exact_approval_status':
             if set(request) != {'version', 'operation', 'proposal_id', 'human_token'}:
                 raise ValueError('Invalid status request')
-            return {'status': 'checked', 'approval': public(row) if row else None}
+            return {'status': 'checked', 'approval': public(row, current) if row else None}
         if request['operation'] != 'approve_exact_action' or 'action_json' not in request:
             raise ValueError('Unsupported exact operation')
         action = validate_binding(request['action_json'], request['action_digest'], daemon.identity_id)
@@ -56,7 +69,7 @@ def handle(daemon, request, *, permit_directory=Path('/etc/ucii-alexa-lifecycle'
             # Reconciliation only: never create a second use or extend expiry.
             if row.action_json != request['action_json'] or row.action_digest != request['action_digest']:
                 raise ValueError('Existing approval binding mismatch')
-            return {'status': 'approved', 'approval': public(row)}
+            return {'status': 'approved', 'approval': public(row, current)}
         path = permit_directory / (proposal_id + '.exact-approval.json')
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
         try:
@@ -97,6 +110,6 @@ def handle(daemon, request, *, permit_directory=Path('/etc/ucii-alexa-lifecycle'
             issuance_authorization_id=permit['authorization_id'],
             now=current.replace(tzinfo=None),
             expires_at=min(current+timedelta(minutes=5), end, proposal_end).replace(tzinfo=None))
-        return {'status': 'approved', 'approval': public(row)}
+        return {'status': 'approved', 'approval': public(row, current)}
     finally:
         db.close()
