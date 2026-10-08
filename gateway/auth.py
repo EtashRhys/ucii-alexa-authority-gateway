@@ -319,5 +319,27 @@ def install_auth_routes(mcp, sign):
                 raise ValueError("Session expired")
         return os.environ["UCII_ALEXA_HUMAN_ID"]
 
+
+    async def with_session(request, operation):
+        prune()
+        scheme, separator, handle = request.headers.get("authorization", "").partition(" ")
+        if not separator or scheme.lower() != "bearer" or handle not in sessions:
+            raise PermissionError()
+        entry = sessions[handle]
+        async with entry["lock"]:
+            if sessions.get(handle) is not entry or entry["deadline"] <= time.monotonic():
+                raise PermissionError()
+            try:
+                await resolve(entry["token"])
+            except Exception:
+                raise PermissionError()
+            if sessions.get(handle) is not entry or entry["deadline"] <= time.monotonic():
+                raise PermissionError()
+            return await asyncio.to_thread(operation, entry["token"], os.environ["UCII_ALEXA_HUMAN_ID"])
+
+    from approval_routes import install as install_approval_routes
+    install_approval_routes(mcp, with_session, _lifecycle_exchange, reply)
+
     from proposals import install_proposal_routes
     install_proposal_routes(mcp, authenticated_human)
+
