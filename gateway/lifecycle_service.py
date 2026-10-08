@@ -51,6 +51,7 @@ class AlexaLifecycleDaemon(ProtectedControllerLifecycleDaemon):
             raise ValueError("HUMAN identity mismatch")
 
     def handle_request(self, request):
+        consumed = False
         try:
             if not isinstance(request, dict):
                 raise ValueError("Invalid request")
@@ -90,10 +91,14 @@ class AlexaLifecycleDaemon(ProtectedControllerLifecycleDaemon):
                     authority_id=authority_id, reason=reason,
                 )
             # Existing UCII daemon verifies controller possession and mutates UCII.
-            return super().handle_request(intent)
+            consumed = True
+            result = super().handle_request(intent)
+            if result.get('status') == 'denied':
+                return {'status': 'uncertain', 'reason': 'Lifecycle permit consumed; reconcile authoritative state before retrying'}
+            return result
         except Exception:
             # Tokens, controller credentials and upstream errors stay private.
-            return {"status": "denied", "reason": "Protected HUMAN approval or one-use operator authorization not established"}
+            return {"status": "uncertain" if consumed else "denied", "reason": "Reconcile authoritative state before retrying" if consumed else "Protected HUMAN approval or one-use operator authorization not established"}
 
 
 def main():
