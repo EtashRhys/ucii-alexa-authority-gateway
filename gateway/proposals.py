@@ -73,6 +73,8 @@ class ProposalStore:
             row = db.execute("SELECT * FROM proposals WHERE proposal_id=? AND human_identity_id=?", (proposal_id, human_identity_id)).fetchone()
             if row is None:
                 raise LookupError("Proposal not found")
+            if cancel and row['state'] in ('APPROVAL_PENDING', 'APPROVED'):
+                raise FileExistsError('Exact approval must be reconciled before draft cancellation')
             if cancel and row['state'] == 'PROPOSED' and row['expires_at'] > now:
                 db.execute("UPDATE proposals SET state='CANCELLED' WHERE proposal_id=?", (proposal_id,))
                 row = db.execute("SELECT * FROM proposals WHERE proposal_id=?", (proposal_id,)).fetchone()
@@ -90,7 +92,7 @@ class ProposalStore:
             'created_at': datetime.fromtimestamp(row['created_at'], timezone.utc).isoformat(),
             'expires_at': datetime.fromtimestamp(row['expires_at'], timezone.utc).isoformat(),
             'state': 'EXPIRED' if row['expires_at'] <= now and row['state'] == 'PROPOSED' else row['state'],
-            'approval': 'NOT_ESTABLISHED', 'execution_allowed': False,
+            'approval': 'CHECK_REQUIRED' if row['state'] in ('APPROVAL_PENDING', 'APPROVED') else 'NOT_ESTABLISHED', 'execution_allowed': False,
         }
 
 
@@ -129,7 +131,7 @@ def install_proposal_routes(mcp, authenticated_human):
                     result = await asyncio.to_thread(store.create, action, human_identity_id=human_id, idempotency_key=body['idempotency_key'])
             return reply({'proposal': result})
         except FileExistsError:
-            return reply({'message': 'This request key belongs to a different action.'}, 409)
+            return reply({'message': 'Proposal is already bound or awaiting approval reconciliation.'}, 409)
         except OverflowError:
             return reply({'message': 'Too many pending proposals. Cancel an unused proposal.'}, 429)
         except LookupError:
@@ -138,3 +140,4 @@ def install_proposal_routes(mcp, authenticated_human):
             return reply({'message': 'Supply an exact action, environment and deployment artifact digest.'}, 400)
         except Exception:
             return reply({'message': 'Proposal storage unavailable. No approval or execution occurred.'}, 503)
+
