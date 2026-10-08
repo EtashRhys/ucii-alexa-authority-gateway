@@ -244,3 +244,17 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 The website keeps a previously retrieved active authority record reference separately from fresh permission evidence. It remains available for revocation review after the check expires; it never enables execution. Sign-out and confirmed revocation clear the reference. The protected service independently checks the authenticated HUMAN and actual record when confirmation is submitted.
 
 **Validation:** Eight isolated gateway tests passed against a mock UCII HTTP boundary: allowed deadlines, invalid durations, expiry, logout, background rotation with unchanged deadline, rotation failure, concurrent session validation during rotation, and unauthenticated authority rejection. Website TypeScript validation passed. These tests do not claim a completed four-hour live retention test. Oracle must pull the new gateway code, run the tests and restart, then the owner should sign in with a selected duration and verify the displayed expiry. No new authority was granted or revoked for this change.
+
+
+### 2026-10-08 — Selected session duration accepted on Oracle and hosted website
+
+- Owner pulled gateway source through the selectable-session update, ran all eight session tests successfully on Oracle, and restarted the gateway.
+- Owner signed in using the four-hour choice at approximately 17:12 America/Toronto; the hosted HUMAN session displayed expiry 21:12:21. This verifies initial duration selection and the hosted/server deadline contract.
+- Website source `9561f439c5a288f818340f298d0f840f51558115` was built and privately published successfully. Live retention and renewal beyond one hour remain pending; four-hour continuous acceptance is not yet claimed.
+
+### 2026-10-08 — Exact deployment request boundary begun
+
+- Reinspection confirmed the current UCII delegated check evaluates operation authority but does not enforce the proposed resource/environment. Protected execution cannot be enabled solely from that positive response.
+- Added an immutable canonical-action contract binding the server-derived subject, operation, resource, environment and exact deployment artifact digest. A mutable artifact label is insufficient to identify the exact action a human is approving.
+- Six isolated contract tests passed locally. Each changed execution field changes the digest; ambiguous scope and browser-supplied subject/approval fields are rejected. A digest is an identifier, not authorization evidence.
+- This module is deliberately not advertised as a live authorization route. Hosted draft/artifact capture, stored proposals, protected one-use approval, consumption and executor enforcement are the dependent wiring steps. No new grant, revocation or deployment occurred.
