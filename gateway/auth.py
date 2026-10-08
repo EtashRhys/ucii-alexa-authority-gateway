@@ -304,3 +304,20 @@ def install_auth_routes(mcp, sign):
                 # A timeout after sending may mean mutation committed: never auto-retry.
                 return reply({"message": "Authority change outcome uncertain. Check authority before retrying."}, 503)
 
+
+    async def authenticated_human(request):
+        prune()
+        scheme, separator, handle = request.headers.get("authorization", "").partition(" ")
+        if not separator or scheme.lower() != "bearer" or handle not in sessions:
+            raise ValueError("Authentication required")
+        entry = sessions[handle]
+        async with entry["lock"]:
+            if sessions.get(handle) is not entry or entry["deadline"] <= time.monotonic():
+                raise ValueError("Session expired")
+            await resolve(entry["token"])
+            if sessions.get(handle) is not entry or entry["deadline"] <= time.monotonic():
+                raise ValueError("Session expired")
+        return os.environ["UCII_ALEXA_HUMAN_ID"]
+
+    from proposals import install_proposal_routes
+    install_proposal_routes(mcp, authenticated_human)
