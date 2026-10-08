@@ -4,6 +4,9 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import time
+import urllib.request
+import urllib.error
 
 
 def main():
@@ -50,6 +53,19 @@ def main():
     dropin.chmod(0o644)
     subprocess.run(['systemctl', 'daemon-reload'], check=True)
     subprocess.run(['systemctl', 'restart', 'ucii-alexa-gateway.service'], check=True)
+    deadline = time.monotonic() + 60
+    while time.monotonic() < deadline:
+        try:
+            with urllib.request.urlopen('http://127.0.0.1:8006/auth/proposals', timeout=3):
+                raise SystemExit('Unexpected unauthenticated proposal response; inspect gateway.')
+        except urllib.error.HTTPError as error:
+            if error.code == 401:
+                break
+            raise SystemExit(f'Unexpected proposal HTTP {error.code}; inspect gateway.')
+        except (urllib.error.URLError, TimeoutError):
+            time.sleep(1)
+    else:
+        raise SystemExit('Gateway did not become ready; inspect service status.')
     print('Proposal storage and HTTPS route installed. Gateway restart requires sign-in.')
     print('No approval, authority grant or execution request was sent.')
 
