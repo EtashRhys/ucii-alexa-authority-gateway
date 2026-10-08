@@ -177,3 +177,11 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - Reviewed UCII delegated authority router, request/response schemas and evaluator. The existing check verifies the bound agent credential and exact logical operation; resource and environment constraints are not evaluated by this endpoint.
 - Added read-only MCP tool `ucii_authority_check`: internally generates and signs an operation challenge, verifies the returned identity/credential/operation and authority state, and always reports execution blocked. No authority grants, payments or execution are performed.
 - Python compilation passed. Oracle live acceptance and website button wiring remain pending; no live authority outcome has been asserted.
+
+
+### 2026-10-08 — Live operation-authority denial and website wiring
+- Oracle acceptance passed: signed `infrastructure.deploy` check returned `NOT_GRANTED`, `operation_authorized: false`, `executed: false` and `execution_allowed: false`. This is a real UCII result, not a simulated denial.
+- Published website source `a80c99e266b63d6bf636117e0e559e758ddd53da`: Check authority now validates the HUMAN session on the server, calls the MCP operation check, validates the bound active agent identity and fresh result, and displays DENIED for non-active authority.
+- Positive operation-only authority remains AUTHORIZATION_REQUIRED for the proposed action. Resource and environment are explicitly unchecked, and execution remains blocked.
+- UI evidence expires after one minute and clears when the proposal or HUMAN session changes. Activity entries describe local-session observations only.
+- TypeScript checking and production build passed; private publication succeeded. Hosted button acceptance remains for owner testing.
