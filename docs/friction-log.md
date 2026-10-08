@@ -209,3 +209,12 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - Review explicitly describes standing operation authority, not a single-use action grant. Resource/environment constraints and protected execution remain unestablished.
 - No grant authorization has been prepared and no successful grant/revoke is asserted. Next acceptance: authenticated website confirmation must remain blocked when the root-controlled operator permit is missing.
 - TypeScript checking, production build and private publication succeeded.
+
+
+### 2026-10-08 — Committed grant reconciled and ACTIVE check accepted
+- Owner prepared one exact operation-grant issuance permit. Hosted confirmation showed generic missing/used-permit feedback, but read-only inspection found one consumed permit and one ACTIVE authority record. No grant retry or replacement permit was issued.
+- Owner confirmed a fresh hosted signed operation check returns ACTIVE for infrastructure.deploy. Proposed-action status remains AUTHORIZATION_REQUIRED because resource/environment approval and execution are not established.
+- Cause of the original confirmation feedback remains unconfirmed. Hardened custody response semantics so failures after permit consumption report uncertain outcome and require authoritative reconciliation, rather than claiming a definite denial.
+- Check authority was disabled until Exact resource was filled; owner confirmed this resolved the UI blockage.
+- Reviewed exact-record revocation response: UCII returns record/state/reason/time, not allowed_operations. Hosted response validation must accept this finite revoke contract before revocation testing.
+- Implementation plan now records verified acceptance separately from pending production controls. Root permit consumption and public signed authority checks are authoritative evidence; local UI events are not durable provenance.
