@@ -218,3 +218,11 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - Check authority was disabled until Exact resource was filled; owner confirmed this resolved the UI blockage.
 - Reviewed exact-record revocation response: UCII returns record/state/reason/time, not allowed_operations. Hosted response validation must accept this finite revoke contract before revocation testing.
 - Implementation plan now records verified acceptance separately from pending production controls. Root permit consumption and public signed authority checks are authoritative evidence; local UI events are not durable provenance.
+
+
+### 2026-10-08 — Revocation contract corrected before mutation acceptance
+- Published website source `dfde77f0e6082a77e4635254e1e5e367dae641e6` accepts UCII's exact-record REVOKED response without requiring an absent operation list. It still verifies command, record identifier and expected state.
+- Added an explicit resource-entry hint and a Close and check authority recovery control after approval errors.
+- TypeScript and production build passed; private publication succeeded.
+- Five isolated scenarios using the actual custody class passed with controlled dependencies: missing HUMAN proof, rejected permit, post-consumption exception, post-consumption denial, and successful mutation response. These are response-boundary tests, not live mutation acceptance.
+- Custody outcome hardening is committed for Oracle installation. Actual revocation and subsequent signed REVOKED/DENIED acceptance remain pending.
