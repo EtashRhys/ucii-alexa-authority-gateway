@@ -326,3 +326,28 @@ Execution remains blocked. See docs/engineering/protected-exact-approval-wiring.
 - [x] Installer readiness check corrected; historical approval label clarified.
 - [ ] Oracle update and live unused exact approval revocation test.
 - [ ] Protected execution integration remains blocked.
+
+
+## Judge-first experience: harmless request → verified exact action — 2026-10-08
+
+Product/demo direction confirmed by owner. This is the intended opening 60–90 seconds of the Alexa+ submission, not a claim that the whole sequence is implemented.
+
+**Guiding principle:** Ask normally. Verify when necessary. Approve exactly what's needed. Execute only when authorized.
+
+1. **Public, harmless request without sign-in:** In the simulated Alexa+ conversation, ask “Check if my infrastructure is online.” Return a genuine public/read-only UCII health result without requiring HUMAN login or granting action authority.
+2. **Consequential request while signed out:** Ask “Deploy the new infrastructure update.” Show AUTHORIZATION REQUIRED and a clear sign-in/identity-verification path. No deployment or authority issuance occurs.
+3. **Sign in and review:** Authenticate the HUMAN through the existing UCII session boundary. Show the exact proposed operation, resource, environment, and immutable artifact digest. Require explicit HUMAN approval, short validity, one-use constraints, and independent UCII authority checks; login by itself is not authorization.
+4. **Authorized sandbox action:** After exact approval and independent checks, execute only a safe, reversible sandbox action through a protected executor. Show a real execution outcome and durable, attributable receipt. Until the executor is wired, say “approved, not executed” rather than implying success.
+5. **Deeper follow-on proofs:** Attempt a changed target/digest, revoked authority, expired approval, and replay to demonstrate fail-closed denial and provenance.
+
+### Acceptance checklist
+
+- [ ] Conversational simulator accepts and interprets the harmless public health request and shows a real response while signed out.
+- [ ] Signed-out consequential request visibly blocks execution and routes to HUMAN authentication.
+- [ ] HUMAN login and explicit review of the exact stored proposal work as one coherent website journey.
+- [ ] Approval is bound to immutable operation/resource/environment/artifact and independent current UCII authority; no browser-only approval flags.
+- [ ] Protected sandbox executor checks authority, expiry and atomic one-use consumption at the effect boundary, and records a durable outcome/receipt.
+- [ ] A replay, modified action and revoked/expired permission fail closed with understandable messages.
+- [ ] Rehearse and record the opening in 60–90 seconds, leaving the rest of the under-three-minute demo for deeper proof.
+
+Keep this a **simulated Alexa+ experience backed by real Streamable HTTP MCP and UCII checks**, not a claim of a physical Alexa device connection. Preserve Guardian/Voice isolation and the existing revoked operation-authority history. Do not bypass the pending protected-executor or entitlement-isolation work to stage a successful result.
