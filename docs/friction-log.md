@@ -258,3 +258,14 @@ The website keeps a previously retrieved active authority record reference separ
 - Added an immutable canonical-action contract binding the server-derived subject, operation, resource, environment and exact deployment artifact digest. A mutable artifact label is insufficient to identify the exact action a human is approving.
 - Six isolated contract tests passed locally. Each changed execution field changes the digest; ambiguous scope and browser-supplied subject/approval fields are rejected. A digest is an identifier, not authorization evidence.
 - This module is deliberately not advertised as a live authorization route. Hosted draft/artifact capture, stored proposals, protected one-use approval, consumption and executor enforcement are the dependent wiring steps. No new grant, revocation or deployment occurred.
+
+
+### 2026-10-08 — Canonical action tests accepted and server-held proposals implemented
+
+- Owner ran all six canonical-action tests successfully on Oracle before proposal wiring.
+- Implemented authenticated create/retrieve/cancel proposal endpoints outside MCP, using the existing opaque HUMAN session and UCII session validation. Agent identity comes from server configuration, not the draft.
+- Private application SQLite records store immutable canonical snapshots and action digests with a fixed 15-minute lifetime. Human-owned idempotency keys preserve the same snapshot and expiry on retries; changed actions with the same key conflict. Cancelled/expired proposals cannot be restored by retrying the original key. This storage is draft state and grants no authority.
+- Added existing website artifact capture and Save/Retrieve/Cancel saved proposal controls. The server adapter checks exact returned fields and recomputes the digest. A device-local opaque proposal reference permits reload retrieval; the gateway independently verifies ownership.
+- Twenty-three isolated tests passed locally, including persisted snapshots, wrong-owner rejection, concurrent retry uniqueness, expiry/cancellation and proposal-session gates. Website TypeScript checking and build passed for source `fb857edcb0a720b412aa0720bed95e68ce61602e`.
+- Added a repeatable Oracle installer for private gateway state storage and the exact HTTPS proposal route, with nginx backup/validation/restore and bounded readiness checking. Its gateway restart ends the current in-memory login; continued live session-renewal testing starts from the next sign-in.
+- Oracle installation and hosted save/reload/cancel acceptance remain pending. No approval, new authority grant, revocation or deployment occurred. Protected exact-action approval/consumption and execution remain unconnected.
