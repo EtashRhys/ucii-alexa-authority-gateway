@@ -14,7 +14,9 @@ Environment=DEBUG=False
 Environment=UCII_CONTROLLER_LIFECYCLE_SOCKET_PATH=/run/ucii-alexa-lifecycle/lifecycle.sock
 Environment=UCII_CONTROLLER_LIFECYCLE_IPC_GROUP=ucii-alexa-lifecycle-ipc
 LoadCredentialEncrypted=alexa-agent-controller:/etc/ucii-alexa-authority/agent-controller-authority.cred
-ExecStart=/opt/ucii/UCII/.venv/bin/python -c "from pq_auth.auth import models; from ucii_agents.controller_lifecycle_service import build_controller_lifecycle_daemon; build_controller_lifecycle_daemon(credential_name='alexa-agent-controller').serve_forever()"
+ExecStart=/opt/ucii/UCII/.venv/bin/python /opt/ucii/ucii-alexa-authority-gateway/gateway/lifecycle_service.py
+StateDirectory=ucii-alexa-lifecycle
+StateDirectoryMode=0700
 RuntimeDirectory=ucii-alexa-lifecycle
 RuntimeDirectoryMode=0750
 Restart=on-failure
@@ -24,7 +26,7 @@ PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
 ReadWritePaths=/var/lib/ucii/database
-RestrictAddressFamilies=AF_UNIX
+RestrictAddressFamilies=AF_UNIX AF_INET
 UMask=0007
 
 [Install]
