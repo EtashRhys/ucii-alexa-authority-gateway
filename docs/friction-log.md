@@ -287,3 +287,8 @@ The website keeps a previously retrieved active authority record reference separ
 - The trusted-side primitive stores independently established exact approval, reserves its single use with an atomic matching update, records a reconciled execution receipt, and revokes unused approval. It does not authenticate or establish approval. Product, HUMAN, agent subject and full canonical action must match; validity is bounded to five minutes.
 - Nine isolated actual SQLAlchemy/temporary-SQLite tests passed locally. Parallel reservation had one winner; expired/not-yet-valid, altered scope, wrong product/HUMAN, duplicate issuance and replay were blocked. RESERVED state cannot be silently released after uncertain effects.
 - UCII checkpoint `8a2b35c5d3bc38be81337d7f550b1f1f46c5b6e7` includes source, tests and an explicit protected-integration contract. Oracle test execution, narrowly scoped migration, protected approval composition and executor remain pending. No Just this time success or production readiness is claimed.
+
+
+## Exact approval table activation checkpoint — 2026-10-08
+
+Owner confirmed all nine UCII exact-action approval tests passed on Oracle at 8a2b35c. Tests used temporary SQLite, not the live database. The explicit scripts/install_exact_action_approval.py migration is committed in UCII: it makes a private online SQLite backup, creates only exact_action_approvals, and stops if the table already exists. Local temporary-database verification confirmed preserved identity data, foreign keys, empty approvals, and repeat protection. Live migration is awaiting the owner command. No exact approval is issued by this migration; protected confirmation and execution remain unwired.
