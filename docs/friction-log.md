@@ -269,3 +269,12 @@ The website keeps a previously retrieved active authority record reference separ
 - Twenty-three isolated tests passed locally, including persisted snapshots, wrong-owner rejection, concurrent retry uniqueness, expiry/cancellation and proposal-session gates. Website TypeScript checking and build passed for source `fb857edcb0a720b412aa0720bed95e68ce61602e`.
 - Added a repeatable Oracle installer for private gateway state storage and the exact HTTPS proposal route, with nginx backup/validation/restore and bounded readiness checking. Its gateway restart ends the current in-memory login; continued live session-renewal testing starts from the next sign-in.
 - Oracle installation and hosted save/reload/cancel acceptance remain pending. No approval, new authority grant, revocation or deployment occurred. Protected exact-action approval/consumption and execution remain unconnected.
+
+
+### 2026-10-08 — Hosted exact proposal lifecycle accepted
+
+- Owner saved an exact infrastructure.deploy test proposal using test-app, staging, and the SHA-256 digest of the gateway source file as a test artifact. No deployment was attempted.
+- Hosted save returned PROPOSED and expiry 17:47:58 America/Toronto. After refresh, retrieval returned the stored proposal with the same expiry; retrieval did not extend its lifetime.
+- Owner cancelled the saved proposal and retrieved it again; state remained CANCELLED with the same expiry. Approval remained NOT_ESTABLISHED and execution stayed blocked.
+- These observations confirm the live storage/HTTPS/website proposal path. The installer terminal output and full new Oracle test run were not supplied, so no additional terminal acceptance is asserted.
+- Reinspection confirmed UCII's existing operation-scoped authority model lacks exact-action binding and execution-use consumption. Protected Just this time approval requires core enforcement; a proposal hash or UI confirmation alone cannot substitute for it. Live schema inspection precedes that change.
