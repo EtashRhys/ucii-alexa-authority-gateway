@@ -156,6 +156,20 @@ class SessionTests(unittest.IsolatedAsyncioTestCase):
         response = await self.routes.routes['/auth/session'](request(handle=data['session'], method='GET'))
         self.assertEqual(response.status_code, 401)
 
+    async def test_proposal_route_requires_session_for_all_methods(self):
+        for method in ('POST', 'GET', 'DELETE'):
+            response = await self.routes.routes['/auth/proposals'](request({}, method=method))
+            self.assertEqual(response.status_code, 401)
+
+    async def test_authenticated_proposal_cannot_choose_agent_identity(self):
+        _, data = await self.login(60)
+        response = await self.routes.routes['/auth/proposals'](request({
+            'action': {'operation': 'infrastructure.inspect', 'resource': 'test-app',
+                       'environment': 'staging', 'subject_identity_id': 'attacker'},
+            'idempotency_key': '00000000-0000-4000-8000-000000000001',
+        }, handle=data['session']))
+        self.assertEqual(response.status_code, 400)
+
     async def test_authority_without_session_rejected(self):
         response = await self.routes.routes['/auth/authority'](request({'command': 'grant', 'operation': 'infrastructure.deploy', 'confirmation': 'GRANT_OPERATION_AUTHORITY'}))
         self.assertEqual(response.status_code, 401)
