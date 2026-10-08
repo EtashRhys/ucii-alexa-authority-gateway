@@ -185,3 +185,10 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - Positive operation-only authority remains AUTHORIZATION_REQUIRED for the proposed action. Resource and environment are explicitly unchecked, and execution remains blocked.
 - UI evidence expires after one minute and clears when the proposal or HUMAN session changes. Activity entries describe local-session observations only.
 - TypeScript checking and production build passed; private publication succeeded. Hosted button acceptance remains for owner testing.
+
+
+### 2026-10-08 — Hosted denial accepted and controller custody reconciled
+- Owner confirmed hosted Check authority displays the real NOT_GRANTED / DENIED result for infrastructure.deploy while execution remains blocked.
+- Controller custody conversion initially failed because decryption inferred the artifact filename instead of its embedded credential name. Supplying the original systemd credential name resolved it; no state changed during failed attempts.
+- Owner confirmed the saved Alexa controller authority verifies against UCII and a canonical encrypted lifecycle credential was prepared. No controller rotation, grant or revocation occurred.
+- Dedicated Alexa lifecycle service and authenticated grant/revoke controls remain pending.
