@@ -282,3 +282,16 @@ Hosted proposal save/reload/cancel acceptance is complete. A proposal is still a
 Source reinspection of UCII ActionAuthority and its lifecycle service confirms the currently implemented delegation is operation-scoped with optional expiry; it does not contain an exact-action digest or atomic execution-use counter. Existing HUMAN step-up/lifecycle evidence concerns grant/revoke ceremonies, not an exact deployment receipt.
 
 Next bounded change: inspect the live UCII schema read-only, then add narrowly scoped exact-action approval persistence and atomic reservation/consumption inside UCII, composed through the dedicated protected Alexa approval boundary. Preserve existing standing authority and historical revoked records. No executor or successful Just this time approval is claimed yet.
+
+
+### UCII exact-action primitive — 2026-10-08
+
+- [x] Owner inspected the live UCII schema read-only; existing action authority has no exact-action binding/use record.
+- [x] Add a separate UCII exact_action_approvals model and trusted-side issue/reserve/consume/revoke primitive, with product/HUMAN/subject/action bindings and at most five-minute approval validity.
+- [x] Validate nine isolated actual SQLAlchemy/SQLite tests, including concurrent reservation, changed-action rejection, expiry, replay, revocation and duplicate issuance.
+- [ ] Run new UCII tests on Oracle without production DDL or service restart.
+- [ ] Compose independently verified protected HUMAN/operator issuance approval with this primitive; clamp validity to the original proposal expiry.
+- [ ] Activate only the new table through an explicit backed-up schema change, then connect the exact-proposal confirmation route.
+- [ ] Add protected execution and effect-boundary rechecks, idempotent status/receipt persistence and uncertain-outcome reconciliation.
+
+UCII source checkpoint: `8a2b35c5d3bc38be81337d7f550b1f1f46c5b6e7`. See UCII docs/engineering/exact-action-approval-primitive.md for the trust boundary. The primitive itself authenticates nobody and cannot be exposed as an ordinary public grant API. No live approval or execution is asserted; existing revoked delegation remains historical and unchanged.
