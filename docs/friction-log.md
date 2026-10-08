@@ -155,3 +155,18 @@ Brad confirmed ownership of UCII and requires Alexa+-scoped entitlement usage to
 - A layout publication archive was rejected as invalid/incomplete. Repackaging the unchanged successful build produced an accepted archive and successful deployment.
 - Earlier identity publication similarly yielded a zero-byte archive. Preserve archive-size/contents verification in deployment workflow rather than retrying an empty artifact.
 - Classification: Internal build/publication tooling friction; resolved for today's deployments.
+
+
+## 2026-10-08 — HUMAN authentication integration
+
+- Confirmed existing active HUMAN identity had no authentication account.
+- Initial terminal prompt opened /dev/tty with r+ and failed because the device is non-seekable. Switched to read-only terminal input; failure occurred before enrollment mutation.
+- Initial script imposed a 16-character password minimum beyond UCII's existing eight-character contract. Operator requested eight; corrected the script to match UCII.
+- Registration HTTP request timed out after 30 seconds. Read-only reconciliation confirmed exactly one active linked account and healthy UCII. Registration was not repeated.
+- Existing session validation took a token query parameter, creating URL/access-log exposure risk. Added a header-only /v1/auth/session endpoint in UCII, preserving compatibility routes. Five focused tests passed on Oracle; live unauthenticated request returned 401.
+- Real login and header-based session resolution matched the existing HUMAN identity. No password or token was printed.
+- Gateway browser login routes use a separate HTTP adapter, not MCP tools. UCII bearer tokens stay in server memory behind opaque 15-minute handles. Dedicated service entitlement coverage added for login economic access; no action authority granted.
+- Gateway login/session/sign-out round-trip passed. Signed-out session returned 401.
+- Nginx exact HTTPS login/session routes installed and validated. Public session request without authentication returned 401.
+- Website login form, HttpOnly Secure SameSite cookie, session display and sign-out implemented. Hosted browser acceptance remains pending.
+- These are internal implementation/runtime observations, not claimed Amazon product defects.
