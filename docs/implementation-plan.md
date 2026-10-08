@@ -295,3 +295,11 @@ Next bounded change: inspect the live UCII schema read-only, then add narrowly s
 - [ ] Add protected execution and effect-boundary rechecks, idempotent status/receipt persistence and uncertain-outcome reconciliation.
 
 UCII source checkpoint: `8a2b35c5d3bc38be81337d7f550b1f1f46c5b6e7`. See UCII docs/engineering/exact-action-approval-primitive.md for the trust boundary. The primitive itself authenticates nobody and cannot be exposed as an ordinary public grant API. No live approval or execution is asserted; existing revoked delegation remains historical and unchanged.
+
+
+### Current exact approval checkpoint — 2026-10-08
+
+- Oracle: nine exact-action primitive tests passed at 8a2b35c.
+- UCII migration script committed and locally verified against temporary SQLite.
+- Next owner step: activate only exact_action_approvals with the backed-up migration.
+- Then connect protected HUMAN confirmation to the exact stored proposal and a separately bounded issuance permit. No live exact approval or executor is enabled yet.
