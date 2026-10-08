@@ -176,7 +176,7 @@ The original Phase 2–4 security/product objectives remain unchecked because a 
 
 ## Website integration tracking — 2026-10-02
 
-The existing [UCII for Alexa+ website](https://ucii-alexa-control.sportgen-ai.chatgpt.site) now has live MCP health, public identity retrieval, and agent credential verification. Human authentication, authority, execution and activity remain incomplete. Its source currently lives separately from this repository.
+The existing [UCII for Alexa+ website](https://ucii-alexa-control.sportgen-ai.chatgpt.site) now has live MCP health, public identity retrieval, and agent credential verification. HUMAN login/sign-out, signed operation checks, protected operation-grant approval and an ACTIVE operation result have been verified. Revocation acceptance, exact-action constraints, execution, conversation and authoritative activity remain incomplete. Its source currently lives separately from this repository.
 
 Follow [Website UI Integration Contract](website-ui-integration.md) for exact control mappings, response rendering, missing workflows, and acceptance evidence. Preserve the canonical order in [Design Build](design-build.md) and existing HUMAN governance / Alexa+-scoped entitlement requirements.
 
@@ -202,7 +202,7 @@ Evidence and exact restart state: [October 7 wiring handoff](wiring-checkpoint-2
 - [x] Verify a fresh agent signature through the public UCII verification API using a separate economic entitlement proof.
 - [x] Connect website Verify agent credential to the real MCP tool and display fingerprint/check time with one-minute proof display expiry.
 - [x] Fix overlapping card buttons; operator confirmed the layout.
-- [ ] Connect human authentication and authenticated approval.
+- [x] Connect HUMAN login/sign-out and authenticated operation-grant review, with an independent root-owned one-use issuance permit.
 - [ ] Secure application/gateway access before exposing approval, authority mutations or execution.
 - [ ] Complete real delegation, policy, authorization decisions, revocation, execution and provenance/activity.
 - [ ] Complete the conversational simulator and requested action interpretation.
@@ -210,3 +210,27 @@ Evidence and exact restart state: [October 7 wiring handoff](wiring-checkpoint-2
 - [ ] Preserve Oracle service configurations/scripts in reproducible deployment files.
 
 UCII application traffic uses its public API. Operator provisioning reused existing UCII administrative modules; those imports are not in the gateway. Source remains split between the Sites repository and this gateway repository, with exact Site commits recorded in the handoff.
+
+
+## Verified wiring checkpoint — 2026-10-08
+
+This checkpoint distinguishes live acceptance from remaining production work.
+
+- [x] Existing HUMAN account login resolves the original HUMAN identity through UCII.
+- [x] Header-only public session endpoint tested; gateway and hosted login/sign-out verified.
+- [x] Signed delegated operation check returns NOT_GRANTED with no execution.
+- [x] Hosted Check authority renders real DENIED.
+- [x] Separate encrypted Alexa controller custody reconciled against UCII.
+- [x] Dedicated Alexa lifecycle process verifies HUMAN sessions independently and consumes exact root-owned one-use operator permits.
+- [x] Unauthenticated local lifecycle, gateway and HTTPS approval requests rejected.
+- [x] Authenticated approval with missing operator permit rejected.
+- [x] Read-only database/provenance reconciliation confirms one committed ACTIVE operation grant and one consumed issuance permit.
+- [x] Hosted fresh signed check confirms ACTIVE operation authority while proposed-action execution remains blocked.
+- [ ] Finish exact-record revocation and verify a fresh signed DENIED / REVOKED result.
+- [ ] Resolve misleading grant confirmation feedback; committed state was reconciled before retry.
+- [ ] Enforce resource/environment, validity and usage constraints for actual protected actions.
+- [ ] Connect a protected executor and durable user-facing provenance/activity.
+- [ ] Connect supported conversation interpretation, clearly distinguish simulation from actual Alexa+.
+- [ ] Complete recurring entitlement product isolation and remaining adversarial validation.
+
+The one-use limit applies to grant issuance authorization, not execution of the standing authority. The grant is operation-scoped, persists until revoked, and does not establish resource/environment approval. No execution has been permitted or attempted. The current route is a verified integration milestone, not completion of the full production authority design.
