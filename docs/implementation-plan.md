@@ -50,7 +50,7 @@ Planning and rule-preservation documentation may be updated before AssemblyAI su
 - [ ] Require exact UCII authorization before execution.
 - [ ] Demonstrate verified identity with zero authority -> denied.
 - [ ] Demonstrate bounded authority grant -> allowed.
-- [ ] Demonstrate revocation -> denied on fresh check.
+- [x] Demonstrate operation-authority revocation -> denied on fresh signed check (hosted acceptance 2026-10-08; execution remains blocked).
 - [ ] Preserve attributable provenance for the sequence.
 
 ## Phase 4 — Alexa+ product experience
@@ -226,7 +226,7 @@ This checkpoint distinguishes live acceptance from remaining production work.
 - [x] Authenticated approval with missing operator permit rejected.
 - [x] Read-only database/provenance reconciliation confirms one committed ACTIVE operation grant and one consumed issuance permit.
 - [x] Hosted fresh signed check confirms ACTIVE operation authority while proposed-action execution remains blocked.
-- [ ] Finish exact-record revocation and verify a fresh signed DENIED / REVOKED result.
+- [x] Finish exact-record revocation and verify a fresh signed DENIED / REVOKED result (owner confirmed hosted flow 2026-10-08).
 - [ ] Resolve misleading grant confirmation feedback; committed state was reconciled before retry.
 - [ ] Enforce resource/environment, validity and usage constraints for actual protected actions.
 - [ ] Connect a protected executor and durable user-facing provenance/activity.
