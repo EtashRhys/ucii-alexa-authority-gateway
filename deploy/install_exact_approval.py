@@ -49,12 +49,12 @@ def main():
     deadline = time.monotonic() + 60
     while time.monotonic() < deadline:
         try:
-            with urllib.request.urlopen('http://127.0.0.1:8006/auth/approvals', timeout=3):
+            with urllib.request.urlopen('http://127.0.0.1:8006/auth/approvals?proposal_id=00000000-0000-0000-0000-000000000000', timeout=3):
                 raise SystemExit('Unexpected unauthenticated proposal response; inspect gateway.')
         except urllib.error.HTTPError as error:
             if error.code == 401:
                 break
-            raise SystemExit(f'Unexpected proposal HTTP {error.code}; inspect gateway.')
+            raise SystemExit(f'Unexpected approval HTTP {error.code}; inspect gateway.')
         except (urllib.error.URLError, TimeoutError):
             time.sleep(1)
     else:
