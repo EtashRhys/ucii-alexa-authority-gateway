@@ -221,6 +221,36 @@ async def ucii_authority_check(operation: str) -> dict:
         "checked_at": datetime.now(timezone.utc).isoformat(),
     }
 
+
+@mcp.tool()
+async def ucii_artifact_verify() -> dict:
+    """Verify only the fixed staging test artifact under current UCII permission."""
+    import asyncio
+    import json
+    import socket
+    from uuid import uuid4
+    def exchange():
+        request = {"version":"ucii-alexa-conversation-tool-v1","request_id":str(uuid4())}
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
+            client.settimeout(30)
+            client.connect("/run/ucii-alexa-executor/executor.sock")
+            client.sendall((json.dumps(request)+"\n").encode())
+            raw=b""
+            while b"\n" not in raw:
+                chunk=client.recv(4096)
+                if not chunk: raise ValueError("Incomplete tool response")
+                raw+=chunk
+                if len(raw)>16384: raise ValueError("Tool response exceeded bound")
+        result=json.loads(raw.split(b"\n",1)[0])
+        data=result.get("tool_result",{})
+        if (result.get("status")!="checked" or data.get("operation")!="sandbox.artifact.verify"
+                or data.get("subject_identity_id")!=os.environ["UCII_ALEXA_AGENT_ID"]
+                or data.get("resource")!="test-app" or data.get("environment")!="staging"
+                or data.get("status") not in {"completed","blocked"} or data.get("deployed") is not False):
+            raise ValueError("Fixed tool result unavailable")
+        return data
+    return await asyncio.to_thread(exchange)
+
 from auth import install_auth_routes
 install_auth_routes(mcp, _agent_sign)
 
