@@ -16,7 +16,7 @@ from pq_auth.authorization.exact_action import ExactActionApproval, ExactActionA
 if 'identities' not in Base.metadata.tables:
     Table('identities',Base.metadata,Column('id',String,primary_key=True))
 from canonical_action import CanonicalAction
-from sandbox_executor import execute, SandboxDenied, SandboxUncertain
+from sandbox_executor import execute, status, SandboxDenied, SandboxUncertain
 
 class SandboxTests(unittest.TestCase):
     def setUp(self):
@@ -74,6 +74,30 @@ class SandboxTests(unittest.TestCase):
             with self.assertRaises(SandboxUncertain):execute(self.db,**self.args)
         self.assertEqual(self.state(),'RESERVED');self.assertEqual(len(list(self.receipts.iterdir())),1)
         with self.assertRaises(SandboxDenied):execute(self.db,**self.args)
+    def test_expiry_during_final_evidence_check_blocks_receipt(self):
+        now=[self.now]
+        calls=[0]
+        def verify(action):
+            calls[0]+=1
+            if calls[0]==2:now[0]=self.now+timedelta(minutes=4)
+            return True
+        self.args.update(verify_current_evidence=verify,clock=lambda:now[0])
+        with self.assertRaises(SandboxUncertain):execute(self.db,**self.args)
+        self.assertEqual(self.state(),'RESERVED');self.assertEqual(list(self.receipts.iterdir()),[])
+    def test_status_is_owner_bound_and_returns_consumed_receipt(self):
+        receipt=execute(self.db,**self.args)
+        args=dict(approval_id=self.row.id,human_identity_id=self.human,subject_identity_id=self.agent,receipt_directory=self.receipts)
+        result=status(self.db,**args)
+        self.assertEqual(result['receipt'],receipt);self.assertFalse(result['reconciliation_required'])
+        with self.assertRaises(SandboxDenied):status(self.db,**{**args,'human_identity_id':str(uuid4())})
+    def test_status_reconciles_uncertainty_without_mutation(self):
+        with patch.object(ExactActionApprovalService,'consume',side_effect=RuntimeError()):
+            with self.assertRaises(SandboxUncertain):execute(self.db,**self.args)
+        result=status(self.db,approval_id=self.row.id,human_identity_id=self.human,subject_identity_id=self.agent,receipt_directory=self.receipts)
+        self.assertTrue(result['reconciliation_required']);self.assertIsNotNone(result['receipt'])
+        self.assertEqual(self.state(),'RESERVED')
+        path=next(self.receipts.iterdir());receipt=json.loads(path.read_text());receipt['action_digest']='sha256:'+'f'*64;path.write_text(json.dumps(receipt))
+        with self.assertRaises(SandboxUncertain):status(self.db,approval_id=self.row.id,human_identity_id=self.human,subject_identity_id=self.agent,receipt_directory=self.receipts)
     def test_artifact_symlink_rejected(self):
         link=self.root/'link';link.symlink_to(self.artifact);self.args['artifact_path']=link
         with self.assertRaises(OSError):execute(self.db,**self.args)
