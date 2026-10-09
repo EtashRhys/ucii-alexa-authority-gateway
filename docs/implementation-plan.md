@@ -363,3 +363,14 @@ Keep this a **simulated Alexa+ experience backed by real Streamable HTTP MCP and
 - [ ] Oracle tests and live denial/success/replay/receipt acceptance.
 
 No executor endpoint is enabled. See [sandbox executor boundary](engineering/sandbox-executor-boundary.md). The sandbox operation is explicitly distinct from infrastructure.deploy; no deployment success is implied.
+
+
+### Independent executor evidence and receipt status — 2026-10-09
+
+- [x] Owner ran all 41 gateway tests on Oracle at c98da34: passed in 11.094 seconds. No executor route enabled.
+- [x] Add protected EvidenceVerifier requiring independent HUMAN session validation, fresh signer proof bound to the exact action digest, and matching active credential/current delegated operation authority through the public UCII API.
+- [x] Add owner/product/agent-bound read-only receipt status and uncertain outcome inspection; never release a RESERVED use or repeat effects.
+- [x] Recheck approval expiry after potentially slow network verification. Full local suite: 48 tests passed.
+- [ ] Deploy the independent verifier in a protected process with its own signer access and server-derived HUMAN/agent bindings. It currently has no route or daemon registration.
+- [ ] Provision fixed artifact, receipt custody, and the explicitly separate sandbox.artifact.verify delegation through the protected owner workflow; existing infrastructure.deploy revocation remains untouched.
+- [ ] Add authenticated executor IPC/gateway/website controls and repeat Oracle/live acceptance.
