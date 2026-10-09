@@ -21,8 +21,10 @@ def read(db, *, agent, receipts):
                 'operation':row['operation'],'result':'blocked' if row['status']=='blocked' else 'matched' if row['artifact_matches'] else 'mismatch'})
         except (OSError,ValueError,KeyError,TypeError):continue
     for row in db.query(ActionAuthority).filter(ActionAuthority.subject_identity_id==agent).all():
-        if row.allowed_operations!=['sandbox.artifact.verify']:continue
-        events.append({'id':row.id+':allow','kind':'permission','time':row.granted_at.replace(tzinfo=timezone.utc).isoformat(),'operation':'sandbox.artifact.verify','result':'allowed'})
+        if row.allowed_operations not in (['sandbox.artifact.verify'],['shopping.list.edit']):continue
+        events.append({'id':row.id+':allow','kind':'permission','time':row.granted_at.replace(tzinfo=timezone.utc).isoformat(),'operation':row.allowed_operations[0],'result':'allowed'})
         if row.revoked_at:
-            events.append({'id':row.id+':block','kind':'permission','time':row.revoked_at.replace(tzinfo=timezone.utc).isoformat(),'operation':'sandbox.artifact.verify','result':'blocked'})
+            events.append({'id':row.id+':block','kind':'permission','time':row.revoked_at.replace(tzinfo=timezone.utc).isoformat(),'operation':row.allowed_operations[0],'result':'blocked'})
+    from shopping_list import activity
+    events.extend(activity(receipts))
     return sorted(events,key=lambda event:event['time'],reverse=True)[:50]
