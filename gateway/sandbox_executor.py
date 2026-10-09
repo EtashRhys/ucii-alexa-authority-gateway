@@ -74,11 +74,14 @@ def execute(db, *, approval_id, human_identity_id, subject_identity_id,
         raise SandboxDenied('Exact approval invalid, expired, revoked or already used')
     try:
         db.refresh(row)
-        current = clock()
-        if current >= row.expires_at or verify_current_evidence(action) is not True:
+        if verify_current_evidence(action) is not True:
             raise SandboxUncertain('Evidence expired or changed after reservation')
         if _artifact(artifact_path) != action['artifact_digest']:
             raise SandboxUncertain('Artifact changed after reservation')
+        # Network verification may take time; evaluate expiry after it returns.
+        current = clock()
+        if current >= row.expires_at:
+            raise SandboxUncertain('Approval expired during evidence verification')
         receipt = {'version':'ucii-alexa-sandbox-receipt-v1',
             'receipt_id':str(uuid4()), 'approval_id':approval_id,
             'proposal_id':row.proposal_id, 'reservation_id':reservation,
@@ -104,3 +107,58 @@ def execute(db, *, approval_id, human_identity_id, subject_identity_id,
     except Exception as error:
         # RESERVED is deliberately retained, including on partial filesystem failure.
         raise SandboxUncertain('Reserved sandbox outcome requires read-only reconciliation') from error
+
+
+def status(db, *, approval_id, human_identity_id, subject_identity_id, receipt_directory):
+    """Owner-bound read-only receipt retrieval; never replay or release a use.
+
+    A valid receipt alongside RESERVED reports reconciliation required; this
+    function never turns a filesystem observation into database consumption.
+    The protected caller authenticates the HUMAN before calling this function.
+    """
+    row = db.get(ExactActionApproval, str(UUID(approval_id)))
+    if (row is None or row.product_id != 'ucii-alexa'
+            or row.human_identity_id != human_identity_id
+            or row.subject_identity_id != subject_identity_id):
+        raise SandboxDenied('Exact approval not found for this owner')
+    result = {'approval_id':row.id,'proposal_id':row.proposal_id,
+        'action_digest':row.action_digest,'state':row.state,
+        'receipt':None,'reconciliation_required':row.state == 'RESERVED'}
+    if row.reservation_id is None:
+        return result
+    directory = Path(receipt_directory)
+    details = directory.lstat()
+    if not stat.S_ISDIR(details.st_mode) or details.st_mode & 0o077:
+        raise SandboxUncertain('Invalid receipt directory custody')
+    path = directory / (str(UUID(row.reservation_id))+'.json')
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+    except FileNotFoundError:
+        if row.state == 'CONSUMED':
+            raise SandboxUncertain('Consumed approval receipt unavailable')
+        return result
+    try:
+        details = os.fstat(fd)
+        if not stat.S_ISREG(details.st_mode) or details.st_mode & 0o077 or details.st_size > 8192:
+            raise SandboxUncertain('Invalid receipt custody')
+        with os.fdopen(fd,'r') as stream:
+            fd = None
+            receipt = json.load(stream)
+    finally:
+        if fd is not None: os.close(fd)
+    action = validate_binding(row.action_json,row.action_digest,row.subject_identity_id)
+    expected = {'version':'ucii-alexa-sandbox-receipt-v1', 'approval_id':row.id,
+        'proposal_id':row.proposal_id,'reservation_id':row.reservation_id,
+        'human_identity_id':row.human_identity_id,'subject_identity_id':row.subject_identity_id,
+        'action_digest':row.action_digest,'artifact_digest':action['artifact_digest'],
+        'operation':action['operation'],'resource':action['resource'],
+        'environment':action['environment'],'outcome':'ARTIFACT_VERIFIED',
+        'deployment_performed':False}
+    if (not isinstance(receipt,dict) or set(receipt) != set(expected)|{'receipt_id','recorded_at'}
+            or any(receipt.get(k) != v for k,v in expected.items())
+            or receipt.get('deployment_performed') is not False
+            or str(UUID(receipt['receipt_id'])) != receipt['receipt_id']
+            or (row.state == 'CONSUMED' and row.execution_receipt_id != receipt['receipt_id'])):
+        raise SandboxUncertain('Receipt binding mismatch')
+    result['receipt'] = receipt
+    return result
