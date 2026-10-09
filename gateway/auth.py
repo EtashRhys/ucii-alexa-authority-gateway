@@ -254,10 +254,10 @@ def install_auth_routes(mcp, sign):
                 intent = {"version":"ucii-alexa-activity-v1"}
             elif command == "shopping":
                 from uuid import UUID
-                if (set(body)!={"command","action","item","request_id"} or body['action'] not in {'get','add','remove'}
+                if (set(body) not in ({"command","action","item","request_id"},{"command","action","item","request_id","list_name"}) or body['action'] not in {'get','create','add','remove'}
                         or not isinstance(body['item'],str) or len(body['item'])>160
                         or str(UUID(body['request_id']))!=body['request_id']):raise ValueError()
-                intent={'version':'ucii-alexa-shopping-v1','command':body['action'],'item':body['item'],'request_id':body['request_id']}
+                intent={'version':'ucii-alexa-shopping-v1','command':body['action'],'item':body['item'],'request_id':body['request_id'], 'list_name':body.get('list_name','Shopping list')}
             elif command == "tool_permission":
                 if (set(body) not in ({"command", "mode", "confirmation"},{"command", "mode", "confirmation", "operation"})
                         or body.get("operation","sandbox.artifact.verify") not in {"sandbox.artifact.verify","shopping.list.edit"}
