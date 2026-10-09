@@ -385,3 +385,10 @@ Four real temporary-SQLite permission tests added: allow/block/restore/idempoten
 - Home now shows the authenticated owner's retrieved artifact Allow/Block permission rather than an unrelated unchecked standing-authority panel. Displayed agent proof is labeled NOT CHECKED until explicitly verified, distinct from a failed verification.
 - Footer uses Authenticate / Allow / Check / Block with working destinations. Block still revokes saved UCII permission internally; user-facing terminology is consistently Allow/Block.
 - Site TypeScript check passed; no Oracle backend update is required for presentation cleanup. User confirmed saved Activity on Oracle and demonstrated blocked tool invocation after a saved Block.
+
+
+### 2026-10-09 — Everyday requests and saved shopping list
+- Added compact public Amazon.ca deals/search and UCII documentation links under More requests; external destinations open in a new tab, without claiming deal comparison. Green links and orange permission shortcuts have consistent spacing; Manage Permission appears after allowed and blocked artifact results.
+- Added owner-only shopping list with separate shopping.list.edit Allow/Block permission. Edits require independent HUMAN session and signed UCII agent permission checks. Viewing remains possible when edits are blocked. No purchases occur.
+- Private SQLite storage commits list edit and activity together; request IDs prevent replayed edits. Activity includes shopping changes and permission history. Existing authority HTTPS route is reused; no new service, nginx route or UCII core schema required.
+- 68 local gateway tests and frontend TypeScript passed. Oracle rollout and live shopping-list demo remain pending; do not describe it as live-validated before acceptance.
