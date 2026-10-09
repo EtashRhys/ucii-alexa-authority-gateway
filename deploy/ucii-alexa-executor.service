@@ -1,0 +1,29 @@
+[Unit]
+Description=UCII Alexa Protected Sandbox Executor
+After=network.target ucii.service ucii-alexa-signer.service
+
+[Service]
+Type=simple
+User=ucii-alexa-executor
+Group=ucii-alexa-executor-ipc
+SupplementaryGroups=ucii-database ucii-alexa-signer-ipc
+WorkingDirectory=/opt/ucii/ucii-alexa-authority-gateway
+Environment=PYTHONPATH=/opt/ucii/UCII/src
+Environment=DATABASE_URL=sqlite:////var/lib/ucii/database/pq_auth.db
+Environment=DEBUG=False
+ExecStart=/opt/ucii/UCII/.venv/bin/python gateway/executor_service.py
+RuntimeDirectory=ucii-alexa-executor
+RuntimeDirectoryMode=0750
+StateDirectory=ucii-alexa-executor
+StateDirectoryMode=0700
+ReadWritePaths=/var/lib/ucii/database
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+UMask=0077
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
