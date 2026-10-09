@@ -392,3 +392,11 @@ Four real temporary-SQLite permission tests added: allow/block/restore/idempoten
 - Added owner-only shopping list with separate shopping.list.edit Allow/Block permission. Edits require independent HUMAN session and signed UCII agent permission checks. Viewing remains possible when edits are blocked. No purchases occur.
 - Private SQLite storage commits list edit and activity together; request IDs prevent replayed edits. Activity includes shopping changes and permission history. Existing authority HTTPS route is reused; no new service, nginx route or UCII core schema required.
 - 68 local gateway tests and frontend TypeScript passed. Oracle rollout and live shopping-list demo remain pending; do not describe it as live-validated before acceptance.
+
+
+### 2026-10-09 — Named lists and compact action workspace
+- User confirmed saved shopping list and Allow/Block work after Oracle update. Initial signed-in errors were caused by the page/server rollout mismatch; existing session success did not imply new tool support was deployed.
+- Added Create shopping list called/named requests, separate named contents and list switching. Existing items/history migrate transactionally to Shopping list once; removed items cannot reappear through repeated migration. UCII shopping.list.edit permission gates creation and edits. Viewing requires owner sign-in and remains available while blocked.
+- Home now prioritizes request and result panels. Desktop layout fits the viewport; long results scroll internally and action buttons/composer remain visible. Large decorative/identity panels leave the primary flow; identity details are collapsed. Smaller screens retain compact stacked panels.
+- Added clearly labeled pancake/tomato-pasta sample recipes and public driving-direction map links; no live navigation or recipe-generation service is claimed. Public examples need no UCII sign-in.
+- 71 local gateway tests, migration/isolation/replay checks and Site TypeScript passed. Named-list Oracle rollout and user visual acceptance remain pending.
