@@ -1,5 +1,25 @@
 # Implementation Plan
 
+
+## Current priority — simplified permission experience (2026-10-09)
+
+This section supersedes deployment/exact-approval expansion as the immediate critical path. Keep identities, signer, login, public MCP and UCII operation authority. Preserve advanced approval records and code; stop adding deployment machinery.
+
+Owner direction: configured capabilities work first; the HUMAN can later restrict them, with server enforcement and audit evidence. “Allowed” means a deliberately exposed bounded tool, not arbitrary shell/server access. Policy changes require authenticated HUMAN confirmation; the agent cannot authorize itself.
+
+Official hackathon FAQ reverified October 9: Alexa+ toolkit/CLI/developer simulator are restricted to select partners and unavailable to hackathon participants. A self-built frontend that actually initializes/lists/calls a Streamable HTTP MCP server is accepted. Do not require an Alexa device, AWS role or gated onboarding. Source: https://amazonappdev2026.devpost.com/details/faqs . This corrects the mistaken recommendation to connect actual Alexa+ next.
+
+Immediate sequence:
+- [x] Real public MCP health tool and authenticated identity/operation check foundation.
+- [x] Owner Oracle 52 tests passed at c067b2c (4.706 seconds); executor enablement printed, final readiness not supplied. Do not claim full installation acceptance.
+- [ ] Publish bounded text conversation calling public health and move exact proposals into an advanced section.
+- [ ] Add one useful fixed tool and simple owner-confirmed Allowed/Blocked permissions, reusing authoritative UCII checks. Do not stage successful execution from a UI flag.
+- [ ] Verify allowed action → HUMAN restriction → denied next action → HUMAN permission restoration → allowed action, with durable audit events.
+- [ ] Present simple permission cards and real activity on the website.
+- [ ] Add optional Ask me first only after the basic flow works; retain exact approvals for advanced operations.
+
+No actual Alexa+ connection is claimed. A deterministic conversation simulation is sufficient for the bounded initial examples; it must call real MCP for real diagnostics and visibly reject unsupported requests.
+
 ## Workflow
 
 Every implementation objective follows:
