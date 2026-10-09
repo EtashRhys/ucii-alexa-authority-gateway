@@ -365,3 +365,6 @@ Four real temporary-SQLite permission tests added: allow/block/restore/idempoten
 - Protected executor independently checks signed UCII delegated permission, reads only its fixed root-controlled artifact, rechecks permission, and durably records completed or blocked results. No deployment or caller-selected path is supported.
 - Local tests: 59 passed; Site TypeScript check passed. Production validation pending: grant gateway membership in ucii-alexa-executor-ipc, restart executor/gateway, then test Block → Allow → Block from conversation.
 - Login timing evidence: UCII service setup 0.077s, password verification 0.701s, hybrid signing 0.003s, persistence 0.010s. User confirmed fast sign-in after restart. Instrumentation did not optimize authentication; the earlier delay's exact cause remains unproven.
+
+- Oracle rollout confirmed: 59 tests passed and executor/gateway restarted. Live MCP check at 2026-10-09T17:43:36Z returned NOT_GRANTED for sandbox.artifact.verify, explaining the blocked conversation result. No saved Allow grant was present at that check.
+- Added Home Sign in entry to existing authentication form (Manage sign-in when authenticated). Blocked conversation results now link directly to Permissions and distinguish signed-in users from signed-out users. Site TypeScript/build passed; no permission was granted by this UI update.
