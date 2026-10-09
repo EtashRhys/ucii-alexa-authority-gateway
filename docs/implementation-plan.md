@@ -20,6 +20,9 @@ Advanced proposals, exact approvals, revoke/lock dialogs, unavailable deployment
 ## Boundary
 Only the configured authenticated HUMAN can change permissions. The agent cannot grant itself permission. The fixed tool accepts no arbitrary operation, resource, file path or subject. Permission is checked independently using protected agent signing. Recorded artifact checks do not deploy anything.
 
+## Shopping list checkpoint
+Owner-only saved shopping list implemented: add, remove and view. Edits use separate shopping.list.edit UCII permission; reads require HUMAN sign-in but remain available when agent edits are blocked. List edits and activity records commit together in private executor storage. No purchases or Amazon account integration. Existing HTTPS authority route and services are reused. 68 local gateway tests passed; live Oracle pull/test/restart and Allow → add → Block → denial acceptance are pending. Compact frontend exposes requests under More requests and its own inline permission card.
+
 ## Remaining presentation work
 - Rehearse the concise demo: public health → Allow → artifact check → Block → denial → Activity.
 - Finish the submission presentation and required hackathon materials.
