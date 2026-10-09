@@ -357,3 +357,11 @@ Four real temporary-SQLite permission tests added: allow/block/restore/idempoten
 - Gateway tests: 56 passed locally; Site TypeScript check passed. Login speed remains unverified on Oracle; deploy the timing change and inspect one real login before optimizing its bottleneck.
 
 - Oracle confirmed gateway login timings: access proof 0.372s, UCII login 2.778s, session validation 0.263s (3.413s combined). Added UCII service setup, account lookup, password verification, hybrid signing, and token persistence timings in UCII commit 59a6d32. Python compilation passed locally; production timings and UCII regression tests are pending the operator update. No password parameters or identity/security checks changed. Resume conversation tool execution after this bounded latency diagnosis.
+
+
+### 2026-10-09 — Fixed tool conversation wiring
+
+- Added ucii_artifact_verify MCP tool. Requests can invoke only the protected fixed test-app staging artifact check. HUMAN login is needed to change Allow/Block; invocation uses the agent's current saved permission without a HUMAN session or exact issuance ceremony.
+- Protected executor independently checks signed UCII delegated permission, reads only its fixed root-controlled artifact, rechecks permission, and durably records completed or blocked results. No deployment or caller-selected path is supported.
+- Local tests: 59 passed; Site TypeScript check passed. Production validation pending: grant gateway membership in ucii-alexa-executor-ipc, restart executor/gateway, then test Block → Allow → Block from conversation.
+- Login timing evidence: UCII service setup 0.077s, password verification 0.701s, hybrid signing 0.003s, persistence 0.010s. User confirmed fast sign-in after restart. Instrumentation did not optimize authentication; the earlier delay's exact cause remains unproven.
