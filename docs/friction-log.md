@@ -315,3 +315,12 @@ Owner confirmed a fresh exact approval for proposal be12aa2a-29ad-4b6b-a1fe-e98b
 Review identified a misleading potential demo boundary: a digest of gateway/server.py is a test binding, not an actual deployable artifact. The executor foundation therefore uses sandbox.artifact.verify for staging test-app, with ARTIFACT_VERIFIED and deployment_performed=false in receipts. No standing deployment authority was restored.
 
 Added isolated trusted execution primitive and seven tests; all 41 local tests pass. Missing evidence or artifact mismatch causes no effect; evidence loss after reservation prevents effects and retry; a lost consumption commit retains a durable receipt and RESERVED state for reconciliation. Current evidence is an explicit protected-composition callback, not a production auth implementation. No endpoint/website button is enabled until that adapter and status/reconciliation are wired. See engineering/sandbox-executor-boundary.md. No observed Amazon/AWS onboarding friction or actual Alexa connection is claimed.
+
+
+## 2026-10-09 — Oracle sandbox tests and independent evidence boundary
+
+Owner pulled c98da34. A duplicated terminal paste joined -v with cd and prevented test execution; repository pull succeeded. Re-running the single corrected command passed all 41 tests on Oracle in 11.094 seconds. No services restarted or effects requested.
+
+Added EvidenceVerifier: protected HUMAN validation on every check, fresh signed nonce and exact action digest, fixed local public UCII delegated/check URL, redirect rejection, bounded response and strict current active credential/operation-authority bindings. Sandbox requires its own sandbox.artifact.verify authority; no infrastructure.deploy grant is restored. The verifier is a trusted composition module, not yet process/route wiring.
+
+Owner-bound read-only status validates durable receipt fields against UCII approval/reservation; RESERVED remains reserved even when a valid receipt exists. It reports reconciliation required and never consumes or replays automatically. Added seven tests, including approval expiry while the final network evidence check completes, owner isolation and tampered receipt rejection. All 48 local tests passed. New Oracle tests and protected process/website installation remain pending.
