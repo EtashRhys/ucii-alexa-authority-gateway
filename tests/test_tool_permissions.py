@@ -39,6 +39,14 @@ class ToolPermissionTests(unittest.TestCase):
         for changes in ({'human_token':''},{'operation':'infrastructure.deploy'},{'confirmation':'model approved'},{'subject_identity_id':self.agent}):
             with self.assertRaises((ValueError,PermissionError)):self.call('allow',**changes)
         with self.factory() as db:self.assertEqual(db.query(ActionAuthority).count(),0)
+    def test_shopping_and_artifact_permissions_are_independent(self):
+        self.call('allow')
+        self.assertEqual(self.call('get',operation='shopping.list.edit')['permission']['mode'],'BLOCKED')
+        self.call('allow',operation='shopping.list.edit')
+        self.call('block',operation='shopping.list.edit')
+        self.assertEqual(self.call()['permission']['mode'],'ALLOWED')
+        self.assertEqual(self.call('get',operation='shopping.list.edit')['permission']['mode'],'BLOCKED')
+
     def test_controller_failure_cannot_grant(self):
         with patch.object(tool_permissions.ControllerAuthorityService,'verify',return_value=False):
             with self.assertRaises(PermissionError):self.call('allow')
