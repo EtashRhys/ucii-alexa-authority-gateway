@@ -40,4 +40,6 @@ Oracle 52 tests passed at c067b2c; executor enablement printed but final readine
 Deployment expansion, broad policy categories and extra AWS infrastructure are paused. Preserve Guardian and Voice isolation.
 
 
-Current checkpoint: fixed staging artifact conversation tool implemented and locally verified (59 tests). Oracle rollout and Block → Allow → Block validation are next. No HUMAN sign-in is needed to invoke this harmless fixed tool under existing agent permission; permission changes remain owner-authenticated. Protected receipts are saved server-side. Durable Activity retrieval remains pending.
+Current checkpoint: fixed staging artifact conversation tool implemented and locally verified (59 tests). Oracle rollout and Block → Allow → Block validation are next. No HUMAN sign-in is needed to invoke this harmless fixed tool under existing agent permission; permission changes remain owner-authenticated. Protected receipts are saved server-side. Durable Activity retrieval is now implemented; Oracle rollout and refresh validation are pending.
+
+Activity checkpoint: owner-only saved artifact receipts and permission history implemented, compact frontend published; 61 local tests passed. Deploy gateway/executor update and verify records after refreshing the browser. Confirmation is inline in the permission card.
