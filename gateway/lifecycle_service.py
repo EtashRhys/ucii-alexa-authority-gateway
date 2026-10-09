@@ -57,6 +57,12 @@ class AlexaLifecycleDaemon(ProtectedControllerLifecycleDaemon):
                 return handle(self, request)
             except Exception:
                 return {'status': 'uncertain', 'reason': 'Exact approval not confirmed; retrieve status before another request'}
+        if isinstance(request, dict) and request.get('version') == 'ucii-alexa-tool-permission-v1':
+            try:
+                from tool_permissions import handle
+                return handle(self, request)
+            except Exception:
+                return {'status':'denied','reason':'Configured HUMAN ownership and controller proof required; retrieve current permission'}
         consumed = False
         try:
             if not isinstance(request, dict):
@@ -122,3 +128,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
