@@ -40,6 +40,33 @@ class ShoppingTests(unittest.TestCase):
             with self.assertRaises(ValueError):self.run_tool(request)
         (self.directory/'shopping.sqlite3').symlink_to(self.directory/'other')
         with self.assertRaises(OSError):self.run_tool(self.request())
+    def test_named_lists_isolate_items_and_block_creation(self):
+        self.run_tool(self.request())
+        created=self.run_tool({**self.request('create',''),'list_name':'Camping'})
+        self.assertEqual(created['result'],'created');self.assertIn('Camping',created['lists'])
+        self.assertEqual(created['items'],[])
+        self.assertEqual(shopping_list.activity(self.directory)[0]['list_name'],'Camping')
+        self.run_tool({**self.request(item='tent'),'list_name':'Camping'})
+        self.assertEqual(self.run_tool(self.request('get',''))['items'],['milk'])
+        self.assertEqual(self.run_tool({**self.request('get',''),'list_name':'camping'})['items'],['tent'])
+        blocked=self.run_tool({**self.request('create',''),'list_name':'Travel'},lambda a:False)
+        self.assertEqual(blocked['result'],'blocked');self.assertNotIn('Travel',blocked['lists'])
+    def test_old_list_migrates_once_and_removed_items_stay_removed(self):
+        import sqlite3
+        path=self.directory/'shopping.sqlite3'
+        db=sqlite3.connect(path)
+        db.execute('CREATE TABLE items (name TEXT PRIMARY KEY)');db.execute("INSERT INTO items VALUES ('milk')")
+        db.execute('CREATE TABLE events (id TEXT PRIMARY KEY,command TEXT,item TEXT,result TEXT,time TEXT)')
+        db.commit();db.close();path.chmod(0o600)
+        self.assertEqual(self.run_tool(self.request('get',''))['items'],['milk'])
+        self.run_tool(self.request('remove'))
+        self.assertEqual(self.run_tool(self.request('get',''))['items'],[])
+    def test_request_binding_includes_list_name(self):
+        request={**self.request('create',''),'list_name':'Camping'}
+        self.run_tool(request)
+        with self.assertRaises(ValueError):self.run_tool({**request,'list_name':'Groceries'})
+        with self.assertRaises(ValueError):self.run_tool({**self.request('get',''),'list_name':'Missing'})
+
     def test_session_failure_before_storage_or_signing(self):
         with patch.object(executor_service,'verify_human',side_effect=PermissionError),patch.object(shopping_list,'run') as run:
             with self.assertRaises(PermissionError):executor_service.handle(self.request(),None)
