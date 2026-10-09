@@ -10,6 +10,13 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'gateway'))
 from conversation_tool import run, EXPECTED
 
 class ConversationToolTests(unittest.TestCase):
+    def setUp(self):
+        original=os.fstat
+        def protected_stat(fd):
+            values=list(original(fd));values[4]=0
+            return os.stat_result(values)
+        custody=patch('conversation_tool.os.fstat',side_effect=protected_stat)
+        custody.start();self.addCleanup(custody.stop)
     def test_allowed_and_blocked_are_recorded(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);root.chmod(0o700)
