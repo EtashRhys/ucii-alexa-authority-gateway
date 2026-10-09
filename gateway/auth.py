@@ -236,7 +236,15 @@ def install_auth_routes(mcp, sign):
             if not isinstance(body, dict):
                 raise ValueError()
             command = body.get("command")
-            if command == "grant":
+            if command == "tool_permission":
+                if (set(body) != {"command", "mode", "confirmation"}
+                        or body["mode"] not in {"get", "allow", "block"}
+                        or body["confirmation"] != ("" if body["mode"] == "get" else "CONFIRM_TOOL_PERMISSION")):
+                    raise ValueError()
+                intent = {"version":"ucii-alexa-tool-permission-v1",
+                    "operation":"sandbox.artifact.verify", "command":body["mode"],
+                    "confirmation":body["confirmation"]}
+            elif command == "grant":
                 import re
                 if set(body) != {"command", "operation", "confirmation"}:
                     raise ValueError()
@@ -277,6 +285,14 @@ def install_auth_routes(mcp, sign):
                 return reply({"message": "HUMAN session could not be verified. No lifecycle request sent."}, 401)
             try:
                 result = await asyncio.to_thread(_lifecycle_exchange, {**intent, "human_token": entry["token"]})
+                if command == "tool_permission":
+                    permission = result.get("permission", {})
+                    if (result.get("status") not in {"saved", "checked"}
+                            or permission.get("operation") != "sandbox.artifact.verify"
+                            or permission.get("subject_identity_id") != os.environ["UCII_ALEXA_AGENT_ID"]
+                            or permission.get("mode") not in {"ALLOWED", "BLOCKED"}):
+                        return reply({"message":"Permission not confirmed. Refresh current permission."},503)
+                    return reply({"permission":permission})
                 if result.get("status") == "denied":
                     return reply({"message": "Protected approval requires a matching, unused operator authorization. No successful change confirmed."}, 403)
                 expected = "granted" if command == "grant" else "revoked"
@@ -342,4 +358,5 @@ def install_auth_routes(mcp, sign):
 
     from proposals import install_proposal_routes
     install_proposal_routes(mcp, authenticated_human)
+
 
