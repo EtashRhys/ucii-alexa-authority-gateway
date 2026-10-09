@@ -374,3 +374,15 @@ No executor endpoint is enabled. See [sandbox executor boundary](engineering/san
 - [ ] Deploy the independent verifier in a protected process with its own signer access and server-derived HUMAN/agent bindings. It currently has no route or daemon registration.
 - [ ] Provision fixed artifact, receipt custody, and the explicitly separate sandbox.artifact.verify delegation through the protected owner workflow; existing infrastructure.deploy revocation remains untouched.
 - [ ] Add authenticated executor IPC/gateway/website controls and repeat Oracle/live acceptance.
+
+
+### Dedicated executor installation preparation — 2026-10-09
+
+- [x] Owner confirmed all 48 tests on Oracle at 0fdaff8 (5.783 seconds).
+- [x] Add local executor process with independent HUMAN session check, server-bound exact UCII approval lookup, protected signer/evidence verifier, and fixed artifact/receipt paths.
+- [x] Add isolated systemd unit and exclusive explicit installer. It provisions no authority and sends no effects.
+- [x] Four new service boundary tests; full 52-test local suite passes.
+- [ ] Owner run Oracle tests and install_executor.py; inspect readiness and reject unauthenticated local execution.
+- [ ] Connect authenticated gateway/website execution and receipt retrieval, then establish sandbox delegation through owner-approved protected workflow and run live denial/success/replay acceptance.
+
+No public executor route or website Execute button exists yet. Previous deployment authority stays revoked.
