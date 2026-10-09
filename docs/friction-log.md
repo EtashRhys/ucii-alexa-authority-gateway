@@ -355,3 +355,5 @@ Four real temporary-SQLite permission tests added: allow/block/restore/idempoten
 - Production Site logs showed MCP initialize HTTP 502 behind the unavailable badge. This is a gateway connection failure, not an authentication denial.
 - Added safe gateway login stage timings for access proof, password login, and session validation. No passwords, tokens, keys, or upstream exception bodies are logged.
 - Gateway tests: 56 passed locally; Site TypeScript check passed. Login speed remains unverified on Oracle; deploy the timing change and inspect one real login before optimizing its bottleneck.
+
+- Oracle confirmed gateway login timings: access proof 0.372s, UCII login 2.778s, session validation 0.263s (3.413s combined). Added UCII service setup, account lookup, password verification, hybrid signing, and token persistence timings in UCII commit 59a6d32. Python compilation passed locally; production timings and UCII regression tests are pending the operator update. No password parameters or identity/security checks changed. Resume conversation tool execution after this bounded latency diagnosis.
