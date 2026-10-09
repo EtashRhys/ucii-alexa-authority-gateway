@@ -252,13 +252,20 @@ def install_auth_routes(mcp, sign):
             if command == "activity":
                 if set(body) != {"command"}:raise ValueError()
                 intent = {"version":"ucii-alexa-activity-v1"}
+            elif command == "shopping":
+                from uuid import UUID
+                if (set(body)!={"command","action","item","request_id"} or body['action'] not in {'get','add','remove'}
+                        or not isinstance(body['item'],str) or len(body['item'])>160
+                        or str(UUID(body['request_id']))!=body['request_id']):raise ValueError()
+                intent={'version':'ucii-alexa-shopping-v1','command':body['action'],'item':body['item'],'request_id':body['request_id']}
             elif command == "tool_permission":
-                if (set(body) != {"command", "mode", "confirmation"}
+                if (set(body) not in ({"command", "mode", "confirmation"},{"command", "mode", "confirmation", "operation"})
+                        or body.get("operation","sandbox.artifact.verify") not in {"sandbox.artifact.verify","shopping.list.edit"}
                         or body["mode"] not in {"get", "allow", "block"}
                         or body["confirmation"] != ("" if body["mode"] == "get" else "CONFIRM_TOOL_PERMISSION")):
                     raise ValueError()
                 intent = {"version":"ucii-alexa-tool-permission-v1",
-                    "operation":"sandbox.artifact.verify", "command":body["mode"],
+                    "operation":body.get("operation","sandbox.artifact.verify"), "command":body["mode"],
                     "confirmation":body["confirmation"]}
             elif command == "grant":
                 import re
@@ -300,6 +307,11 @@ def install_auth_routes(mcp, sign):
             except Exception:
                 return reply({"message": "HUMAN session could not be verified. No lifecycle request sent."}, 401)
             try:
+                if command == "shopping":
+                    result=await asyncio.to_thread(_lifecycle_exchange,{**intent,"human_token":entry['token']},"/run/ucii-alexa-executor/executor.sock")
+                    if result.get('status')!='checked' or result.get('shopping',{}).get('operation')!='shopping.list.edit':
+                        return reply({'message':'Shopping result not confirmed. Retrieve your list before retrying.'},503)
+                    return reply({'shopping':result['shopping']})
                 if command == "activity":
                     result = await asyncio.to_thread(_lifecycle_exchange, {**intent,"human_token":entry["token"]}, "/run/ucii-alexa-executor/executor.sock")
                     if result.get("status")!="checked" or not isinstance(result.get("activity"),list):
@@ -309,7 +321,7 @@ def install_auth_routes(mcp, sign):
                 if command == "tool_permission":
                     permission = result.get("permission", {})
                     if (result.get("status") not in {"saved", "checked"}
-                            or permission.get("operation") != "sandbox.artifact.verify"
+                            or permission.get("operation") != intent["operation"]
                             or permission.get("subject_identity_id") != os.environ["UCII_ALEXA_AGENT_ID"]
                             or permission.get("mode") not in {"ALLOWED", "BLOCKED"}):
                         return reply({"message":"Permission not confirmed. Refresh current permission."},503)
