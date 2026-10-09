@@ -368,3 +368,11 @@ Four real temporary-SQLite permission tests added: allow/block/restore/idempoten
 
 - Oracle rollout confirmed: 59 tests passed and executor/gateway restarted. Live MCP check at 2026-10-09T17:43:36Z returned NOT_GRANTED for sandbox.artifact.verify, explaining the blocked conversation result. No saved Allow grant was present at that check.
 - Added Home Sign in entry to existing authentication form (Manage sign-in when authenticated). Blocked conversation results now link directly to Permissions and distinguish signed-in users from signed-out users. Site TypeScript/build passed; no permission was granted by this UI update.
+
+
+### 2026-10-09 — Compact permission confirmation and saved Activity
+
+- Moved Confirm/Cancel into the controlled tool permission card beside its controls; removed the detached confirmation panel and message.
+- Replaced the empty Activity page and local diagnostics with a compact Time/Action/Result list and header Refresh. Reads up to 50 saved protected artifact receipts and UCII Allow/Block history through the existing /auth/authority route.
+- Activity is owner-session authenticated at the gateway and independently verified in the executor before file/database reads. No new nginx route or schema required; no mutation occurs during refresh.
+- 61 backend tests passed locally; Site TypeScript check passed. Oracle rollout requires pulling gateway and restarting executor/gateway, then signing in and refreshing Activity to verify historical records survive page reload.
