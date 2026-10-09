@@ -324,3 +324,10 @@ Owner pulled c98da34. A duplicated terminal paste joined -v with cd and prevente
 Added EvidenceVerifier: protected HUMAN validation on every check, fresh signed nonce and exact action digest, fixed local public UCII delegated/check URL, redirect rejection, bounded response and strict current active credential/operation-authority bindings. Sandbox requires its own sandbox.artifact.verify authority; no infrastructure.deploy grant is restored. The verifier is a trusted composition module, not yet process/route wiring.
 
 Owner-bound read-only status validates durable receipt fields against UCII approval/reservation; RESERVED remains reserved even when a valid receipt exists. It reports reconciliation required and never consumes or replays automatically. Added seven tests, including approval expiry while the final network evidence check completes, owner isolation and tampered receipt rejection. All 48 local tests passed. New Oracle tests and protected process/website installation remain pending.
+
+
+## 2026-10-09 — Dedicated sandbox process prepared
+
+Owner confirmed all 48 tests passed on Oracle at 0fdaff8 in 5.783 seconds. Prepared executor_service.py local finite Unix-socket boundary, ucii-alexa-executor.service separate account/group and fixed paths, and deploy/install_executor.py. Identity/fingerprint bindings are copied only from an explicit allowlist in existing gateway configuration; no secrets printed. Root-owned fixed sandbox artifact is provisioned exclusively, with digest reported. Existing service/configuration installations are not overwritten on retry.
+
+The service derives owner/agent/action from protected configuration and UCII approval, validates HUMAN independently, checks signed current operation authority, and writes only private sandbox receipts. Browser-supplied paths/subjects and unauthenticated requests fail before database access. Empty/oversized local clients are bounded. All 52 local tests pass. Production installation and no-session socket rejection remain owner acceptance steps. No grants, approvals, effects, public routing, or website execution enabled by this source update.
