@@ -38,3 +38,11 @@ https://amazonappdev2026.devpost.com/details/faqs
 - [Historical implementation record](archive/implementation-history-through-2026-10-09.md)
 
 Broad policy categories and deployment expansion are paused. Preserve Guardian and Voice isolation.
+
+## Public judge accounts — in progress
+- User made the Site public. Public health, recipes and outbound links remain available without UCII login.
+- Published Site v35 stops anonymous HUMAN identity retrieval, checks returned identity against the authenticated session and clears personal results on account change/sign-out. Agent identity remains public. Homepage link now targets https://ucii.sportgen-ai.com/.
+- Existing Oracle gateway/lifecycle/executor remain single-owner. Do not enable arbitrary users against shared Brad storage or agent-wide permission toggles.
+- Required before judge signup: verified email flow with expiring single-use tokens and retry bounds; production SMTP sender; server-issued HUMAN identity/account; bounded demo entitlement issued only after verification; server-derived per-user list, permission and Activity ownership; two-account isolation checks.
+- User selected an existing SMTP account. Sender/server configuration and delivery acceptance are pending; never request passwords or SMTP secrets in chat.
+- Signup is not live. Do not present email entry, an unverified account or a successful UI form as verification or entitlement issuance.
