@@ -324,7 +324,7 @@ Execution remains blocked. See docs/engineering/protected-exact-approval-wiring.
 - [x] Owner verified exact approval ACTIVE then expiry display; execution stayed blocked.
 - [x] Owner-bound protected exact revocation implemented; 34 local tests pass.
 - [x] Installer readiness check corrected; historical approval label clarified.
-- [ ] Oracle update and live unused exact approval revocation test.
+- [x] Oracle update: 34 tests passed and installer completed; owner verified fresh unused exact approval ACTIVE → REVOKED → REVOKED on 2026-10-09.
 - [ ] Protected execution integration remains blocked.
 
 
@@ -351,3 +351,15 @@ Product/demo direction confirmed by owner. This is the intended opening 60–90 
 - [ ] Rehearse and record the opening in 60–90 seconds, leaving the rest of the under-three-minute demo for deeper proof.
 
 Keep this a **simulated Alexa+ experience backed by real Streamable HTTP MCP and UCII checks**, not a claim of a physical Alexa device connection. Preserve Guardian/Voice isolation and the existing revoked operation-authority history. Do not bypass the pending protected-executor or entitlement-isolation work to stage a successful result.
+
+
+### Sandbox executor preparation — 2026-10-09
+
+- [x] Record live exact approval revocation acceptance for proposal be12aa2a-29ad-4b6b-a1fe-e98b9e7ce05f; preserve revoked/expired history.
+- [x] Add trusted sandbox.artifact.verify primitive with fixed test-app/staging scope, artifact digest checks, atomic UCII reservation, private durable receipt and consumption.
+- [x] Verify seven new isolated tests; all 41 local gateway tests pass.
+- [ ] Compose independent live HUMAN/agent credential/authority checks; callbacks in tests are not production evidence.
+- [ ] Provision fixed sandbox artifact and receipt custody; add protected IPC/status/reconciliation and authenticated website execution controls.
+- [ ] Oracle tests and live denial/success/replay/receipt acceptance.
+
+No executor endpoint is enabled. See [sandbox executor boundary](engineering/sandbox-executor-boundary.md). The sandbox operation is explicitly distinct from infrastructure.deploy; no deployment success is implied.
