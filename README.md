@@ -1,46 +1,21 @@
-# UCII Alexa Authority Gateway
+# UCII for Alexa+
 
-Self-hosted MCP authority gateway for Alexa+ that gives AI agents cryptographically verifiable identity and bounded, revocable authority using UCII.
+A simple conversation interface backed by real MCP and UCII identity, permissions and revocation.
 
-## Project status
+**Use a tool. Set a boundary. Enforce it. Record what happened.**
 
-This repository is the public engineering workspace for the **Build, Ship, Shape: Amazon Developer Hackathon 2026**. The primary track is **Alexa+**.
+## Current build
+- Public UCII health works through the real MCP gateway without UCII sign-in.
+- HUMAN login and agent signing are connected.
+- Permissions shows only public health and one fixed staging artifact tool.
+- Allow/Block management uses authenticated HUMAN approval inside protected controller custody. Oracle update and live acceptance are pending.
+- Controlled tool invocation and durable Activity are next. No deployment capability is exposed.
 
-The project is intentionally being built as a separate application that integrates with UCII through public interfaces. UCII remains the authoritative identity and authorization infrastructure; this repository does not duplicate or replace the UCII core.
+The conversation is a bounded Alexa+ simulation. Official hackathon guidance accepts a custom frontend calling a real Streamable HTTP MCP server; actual Alexa+ developer tools are gated and unavailable to participants.
 
-## Core principle
+## Development
+[Current plan](docs/implementation-plan.md) · [Friction log](docs/friction-log.md) · [Submission requirements](docs/hackathon-requirements.md)
 
-> Capability is not authority.
+Advanced exact-action approval work is retained, but is not required for the simple fixed-tool experience. Earlier plans are historical references, not additional implementation requirements.
 
-An Alexa+/MCP agent may have the technical capability to invoke a tool without having permission to perform the underlying consequential action. The gateway will demonstrate independent identity verification, bounded delegated authority, revocation, provenance, and fail-closed execution decisions.
-
-## Planned architecture
-
-```text
-Alexa+ / simulated Alexa+ experience
-            |
-            v
-Self-hosted MCP authority gateway
-            |
-            v
-          UCII
- identity -> credentials -> authentication
-          -> authorization -> provenance
-            |
-            v
-     protected action/tool
-```
-
-## Hackathon scope
-
-The submission is planned for the **Alexa+ track**, with evaluation of the **AWS Builder** and **Open Source** mini challenges where the final implementation genuinely satisfies their requirements.
-
-Detailed engineering and submission contracts live in [`docs/`](docs/).
-
-- [Website UI integration contract](docs/website-ui-integration.md): exact control wiring, missing backend workflows, and acceptance evidence for the existing disconnected website.
-- [Implementation plan](docs/implementation-plan.md): bounded implementation checkpoints.
-- [Friction log](docs/friction-log.md): factual observed friction; internal UI gaps are distinguished from Amazon/AWS platform issues.
-
-## License
-
-This project is intended to be open source. See [`LICENSE`](LICENSE) once the repository foundation is complete.
+License: [MIT](LICENSE).
