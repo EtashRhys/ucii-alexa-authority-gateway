@@ -57,6 +57,12 @@ def receive(client,limit=16384):
 
 
 def handle(request,session_factory):
+    if isinstance(request,dict) and request.get('version')=='ucii-alexa-activity-v1':
+        if set(request)!={'version','human_token'}:raise ValueError('Invalid activity request')
+        verify_human(request['human_token'])
+        from activity import read
+        with session_factory() as db:
+            return {'status':'checked','activity':read(db,agent=os.environ['UCII_ALEXA_AGENT_ID'],receipts=RECEIPTS)}
     if isinstance(request,dict) and request.get('version')=='ucii-alexa-conversation-tool-v1':
         from conversation_tool import run
         agent=os.environ['UCII_ALEXA_AGENT_ID']
