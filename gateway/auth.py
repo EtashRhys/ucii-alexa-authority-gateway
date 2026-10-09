@@ -4,6 +4,7 @@ import base64
 from collections import deque
 from datetime import datetime, timedelta, timezone
 import json
+import logging
 import os
 import secrets
 import time
@@ -155,21 +156,32 @@ def install_auth_routes(mcp, sign):
                 raise ValueError()
         except (ValueError, TypeError):
             return reply({"message": "Enter your email and password."}, 400)
+        stage = "access_proof"
+        started = time.perf_counter()
+        timings = {}
         try:
             presentation = await economic_proof()
+            timings[stage] = time.perf_counter() - started
+            stage = "password_login"
+            started = time.perf_counter()
             async with httpx.AsyncClient(timeout=120, follow_redirects=False) as client:
                 response = await client.post(
                     "http://127.0.0.1:8000/v1/auth/login",
                     json={key: body[key] for key in ("email", "password")},
                     headers={"x-ucii-service-entitlement": presentation},
                 )
+            timings[stage] = time.perf_counter() - started
             if response.status_code == 401:
                 return reply({"message": "Login could not be verified."}, 401)
             response.raise_for_status()
             token = response.json()["access_token"]
             if not isinstance(token, str) or not token:
                 raise ValueError()
+            stage = "session_validation"
+            started = time.perf_counter()
             await resolve(token)
+            timings[stage] = time.perf_counter() - started
+            logging.getLogger(__name__).warning("UCII login timing seconds: access_proof=%.3f password_login=%.3f session_validation=%.3f", timings["access_proof"], timings["password_login"], timings["session_validation"])
             prune()
             if len(sessions) >= 32:
                 discard(next(iter(sessions)))
@@ -186,6 +198,7 @@ def install_auth_routes(mcp, sign):
                 "authentication": "AUTHENTICATED", "expires_at": expires.isoformat(),
             })
         except Exception:
+            logging.getLogger(__name__).warning("UCII login failed at %s after %.3f seconds", stage, time.perf_counter() - started)
             # Never include upstream errors, tokens or credentials in diagnostics.
             return reply({"message": "UCII login is unavailable. No authority changed."}, 503)
 
