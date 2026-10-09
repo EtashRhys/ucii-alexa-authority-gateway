@@ -25,3 +25,10 @@ Seven new isolated temporary-SQLite tests cover receipt/single-use success, expi
 6. Verify one success, replay denial, expiry/revocation rejection and durable receipt retrieval.
 
 Existing standing infrastructure.deploy authority stays REVOKED. Guardian, Voice, identities, credentials and controller custody remain unchanged.
+
+
+## Independent evidence adapter and status follow-up
+
+Oracle 41-test acceptance is confirmed at c98da34 (11.094 seconds). executor_evidence.EvidenceVerifier now provides the required independent check: protected HUMAN resolver, fresh protected signer challenge including action digest, and strict public UCII signed delegated/check response validation. It checks active agent credential and separate sandbox operation delegation. The adapter's signer/HUMAN functions must be supplied by protected composition, never ordinary request data. This component is not registered with a daemon or endpoint yet.
+
+sandbox_executor.status returns only owner/product/agent-bound approval and validated receipt evidence. RESERVED with receipt reports reconciliation_required=true without mutating UCII. Missing/mismatched receipts for CONSUMED fail uncertain. No release, replay or automatic finalization exists. Final expiry is checked after network evidence returns, before the receipt effect. Full local suite is now 48 tests; Oracle rerun pending.
