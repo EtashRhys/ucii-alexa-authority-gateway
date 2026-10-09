@@ -57,6 +57,13 @@ def receive(client,limit=16384):
 
 
 def handle(request,session_factory):
+    if isinstance(request,dict) and request.get('version')=='ucii-alexa-shopping-v1':
+        verify_human(request.get('human_token'))
+        from shopping_list import run
+        agent=os.environ['UCII_ALEXA_AGENT_ID']
+        verifier=EvidenceVerifier(human_token=request['human_token'],verify_human=verify_human,
+            sign=sign,identity_id=agent,fingerprint=os.environ['UCII_ALEXA_AGENT_FINGERPRINT'])
+        return {'status':'checked','shopping':run(request,agent=agent,verify=verifier,directory=RECEIPTS)}
     if isinstance(request,dict) and request.get('version')=='ucii-alexa-activity-v1':
         if set(request)!={'version','human_token'}:raise ValueError('Invalid activity request')
         verify_human(request['human_token'])
