@@ -170,6 +170,20 @@ class SessionTests(unittest.IsolatedAsyncioTestCase):
         }, handle=data['session']))
         self.assertEqual(response.status_code, 400)
 
+    async def test_shopping_route_carries_server_token_and_requires_session(self):
+        from uuid import uuid4
+        body={'command':'shopping','action':'add','item':'milk','request_id':str(uuid4())}
+        response=await self.routes.routes['/auth/authority'](request(body))
+        self.assertEqual(response.status_code,401)
+        _,data=await self.login(60)
+        with patch.object(auth,'_lifecycle_exchange',return_value={'status':'checked','shopping':{'operation':'shopping.list.edit'}}) as exchange:
+            response=await self.routes.routes['/auth/authority'](request(body,handle=data['session']))
+            self.assertEqual(response.status_code,200)
+            intent,path=exchange.call_args.args
+            self.assertEqual(intent['human_token'],self.old)
+            self.assertEqual(intent['item'],'milk')
+            self.assertEqual(path,'/run/ucii-alexa-executor/executor.sock')
+
     async def test_authority_without_session_rejected(self):
         response = await self.routes.routes['/auth/authority'](request({'command': 'grant', 'operation': 'infrastructure.deploy', 'confirmation': 'GRANT_OPERATION_AUTHORITY'}))
         self.assertEqual(response.status_code, 401)
