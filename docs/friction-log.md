@@ -306,3 +306,12 @@ Oracle: all 31 prior gateway tests passed. Installer restarted services and inst
 Owner accepted exact approval 9ca0fb94-4db5-4b55-8956-f2faece26dcf for proposal 3ec98387-092b-43f0-bdfb-edb44773fc5b, digest sha256:adf177fb9e978faf06ff6237fed59e72a6be17dfd295f3e2b6879b844a3696e0. UI showed ACTIVE, then EXPIRED at 22:47:49 UTC, always execution_allowed=false. Expired record remains unchanged. The prior proposal APPROVED label confused historical issuance with current validity; display now says APPROVAL RECORDED.
 
 New finite revoke_exact_approval verifies current HUMAN session/controller custody, targets the product/proposal/owner/agent bound UCII row, and removes only unused unexpired approval. Revocation creates no authority and needs no new issuance permit. Reserved or expired records are unchanged; repeated REVOKED response is reconciliation. Local suite now 34 tests passes. Oracle update and live fresh-approval revocation acceptance pending. No execution or Alexa conversation enabled.
+
+
+## 2026-10-09 — Exact revocation accepted; sandbox effect boundary prepared
+
+Owner confirmed a fresh exact approval for proposal be12aa2a-29ad-4b6b-a1fe-e98b9e7ce05f was ACTIVE, explicitly revoked, and still REVOKED on subsequent status retrieval. Draft state APPROVAL_REVOKED; execution remained blocked. Previous Oracle update at 3568429 passed all 34 tests and completed the corrected installer/nginx check.
+
+Review identified a misleading potential demo boundary: a digest of gateway/server.py is a test binding, not an actual deployable artifact. The executor foundation therefore uses sandbox.artifact.verify for staging test-app, with ARTIFACT_VERIFIED and deployment_performed=false in receipts. No standing deployment authority was restored.
+
+Added isolated trusted execution primitive and seven tests; all 41 local tests pass. Missing evidence or artifact mismatch causes no effect; evidence loss after reservation prevents effects and retry; a lost consumption commit retains a durable receipt and RESERVED state for reconciliation. Current evidence is an explicit protected-composition callback, not a production auth implementation. No endpoint/website button is enabled until that adapter and status/reconciliation are wired. See engineering/sandbox-executor-boundary.md. No observed Amazon/AWS onboarding friction or actual Alexa connection is claimed.
