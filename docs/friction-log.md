@@ -376,3 +376,12 @@ Four real temporary-SQLite permission tests added: allow/block/restore/idempoten
 - Replaced the empty Activity page and local diagnostics with a compact Time/Action/Result list and header Refresh. Reads up to 50 saved protected artifact receipts and UCII Allow/Block history through the existing /auth/authority route.
 - Activity is owner-session authenticated at the gateway and independently verified in the executor before file/database reads. No new nginx route or schema required; no mutation occurs during refresh.
 - 61 backend tests passed locally; Site TypeScript check passed. Oracle rollout requires pulling gateway and restarting executor/gateway, then signing in and refreshing Activity to verify historical records survive page reload.
+
+
+### 2026-10-09 — Simple interface presentation complete
+
+- Removed advanced proposal/exact-approval UI, obsolete policy/grant/revoke/lock dialogs and dead page handlers. Historical backend records and capabilities remain intact.
+- Removed the unavailable deployment example and unused microphone control. Updated sign-in and connection messages to current capabilities.
+- Home now shows the authenticated owner's retrieved artifact Allow/Block permission rather than an unrelated unchecked standing-authority panel. Displayed agent proof is labeled NOT CHECKED until explicitly verified, distinct from a failed verification.
+- Footer uses Authenticate / Allow / Check / Block with working destinations. Block still revokes saved UCII permission internally; user-facing terminology is consistently Allow/Block.
+- Site TypeScript check passed; no Oracle backend update is required for presentation cleanup. User confirmed saved Activity on Oracle and demonstrated blocked tool invocation after a saved Block.
