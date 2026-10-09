@@ -38,3 +38,6 @@ Oracle 52 tests passed at c067b2c; executor enablement printed but final readine
 - [Historical implementation record](archive/implementation-history-through-2026-10-09.md): superseded plans and checkpoints, not the current task list.
 
 Deployment expansion, broad policy categories and extra AWS infrastructure are paused. Preserve Guardian and Voice isolation.
+
+
+Current checkpoint: fixed staging artifact conversation tool implemented and locally verified (59 tests). Oracle rollout and Block → Allow → Block validation are next. No HUMAN sign-in is needed to invoke this harmless fixed tool under existing agent permission; permission changes remain owner-authenticated. Protected receipts are saved server-side. Durable Activity retrieval remains pending.
