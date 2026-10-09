@@ -347,3 +347,11 @@ Owner requested removal of unconnected policy categories and unnecessary documen
 Simple tool permission route uses existing HTTPS authority endpoint and protected controller custody. Configured HUMAN ownership plus independently verified current HUMAN session and controller possession establishes permission-change authority for sandbox.artifact.verify only; no repeated terminal issuance permits for this fixed harmless capability. Generic advanced grant routes retain existing gates. Request cannot choose operation, identity, or artifact paths. Block revokes only exact one-operation records; restoration creates a fresh record, preserving revoked history. Mixed-scope active records require advanced review rather than broad revocation.
 
 Four real temporary-SQLite permission tests added: allow/block/restore/idempotency/history, absent session/changed scope/fabricated confirmation rejection, controller failure and preservation of unrelated authority. Full local suite 56 passes. Site TypeScript/production build pass, source 1f742d11939af1f50d03eb78a0779917020c52c4. Oracle pull/tests and gateway/lifecycle restart required before live permission acceptance. Controlled execution from conversation and durable Activity remain pending and are stated in the UI. No deployment authority restored.
+
+
+### 2026-10-09 — Public chat and login latency
+
+- Removed the unsupported deployment example's automatic sign-in dialog. Public health and capability questions do not require HUMAN authentication; permission changes still do.
+- Production Site logs showed MCP initialize HTTP 502 behind the unavailable badge. This is a gateway connection failure, not an authentication denial.
+- Added safe gateway login stage timings for access proof, password login, and session validation. No passwords, tokens, keys, or upstream exception bodies are logged.
+- Gateway tests: 56 passed locally; Site TypeScript check passed. Login speed remains unverified on Oracle; deploy the timing change and inspect one real login before optimizing its bottleneck.
