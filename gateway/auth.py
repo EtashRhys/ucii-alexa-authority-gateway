@@ -26,11 +26,11 @@ def _token_expiry(token):
 
 
 
-def _lifecycle_exchange(intent):
+def _lifecycle_exchange(intent, socket_path="/run/ucii-alexa-lifecycle/lifecycle.sock"):
     import socket
     with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
         client.settimeout(35)
-        client.connect("/run/ucii-alexa-lifecycle/lifecycle.sock")
+        client.connect(socket_path)
         client.sendall((json.dumps(intent) + "\n").encode("utf-8"))
         raw = b""
         while b"\n" not in raw:
@@ -249,7 +249,10 @@ def install_auth_routes(mcp, sign):
             if not isinstance(body, dict):
                 raise ValueError()
             command = body.get("command")
-            if command == "tool_permission":
+            if command == "activity":
+                if set(body) != {"command"}:raise ValueError()
+                intent = {"version":"ucii-alexa-activity-v1"}
+            elif command == "tool_permission":
                 if (set(body) != {"command", "mode", "confirmation"}
                         or body["mode"] not in {"get", "allow", "block"}
                         or body["confirmation"] != ("" if body["mode"] == "get" else "CONFIRM_TOOL_PERMISSION")):
@@ -297,6 +300,11 @@ def install_auth_routes(mcp, sign):
             except Exception:
                 return reply({"message": "HUMAN session could not be verified. No lifecycle request sent."}, 401)
             try:
+                if command == "activity":
+                    result = await asyncio.to_thread(_lifecycle_exchange, {**intent,"human_token":entry["token"]}, "/run/ucii-alexa-executor/executor.sock")
+                    if result.get("status")!="checked" or not isinstance(result.get("activity"),list):
+                        return reply({"message":"Activity unavailable."},503)
+                    return reply({"activity":result["activity"]})
                 result = await asyncio.to_thread(_lifecycle_exchange, {**intent, "human_token": entry["token"]})
                 if command == "tool_permission":
                     permission = result.get("permission", {})
