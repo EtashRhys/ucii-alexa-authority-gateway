@@ -400,3 +400,10 @@ Four real temporary-SQLite permission tests added: allow/block/restore/idempoten
 - Home now prioritizes request and result panels. Desktop layout fits the viewport; long results scroll internally and action buttons/composer remain visible. Large decorative/identity panels leave the primary flow; identity details are collapsed. Smaller screens retain compact stacked panels.
 - Added clearly labeled pancake/tomato-pasta sample recipes and public driving-direction map links; no live navigation or recipe-generation service is claimed. Public examples need no UCII sign-in.
 - 71 local gateway tests, migration/isolation/replay checks and Site TypeScript passed. Named-list Oracle rollout and user visual acceptance remain pending.
+
+### 2026-10-09 — Public Site privacy and judge registration
+- Public page previously retrieved configured HUMAN identity on startup and retained it after sign-out. Removed anonymous HUMAN fetch; Site API requires a session and checks returned identity belongs to it. Personal results clear when identity changes. Public agent/health remain available.
+- TypeScript and production build passed; Site v35 published publicly. Mocked route checks cover anonymous denial before upstream, other-account identity denial and matching-owner retrieval. Browser acceptance pending.
+- UCII User/register currently lacks email-verification state and requires an existing active identity. No SMTP transport was found in inspected core paths/config example. Gateway, lifecycle and executor deliberately reject identities other than Brad. New judges cannot safely be enabled by loosening that check alone.
+- Existing SMTP chosen for verification email; deployment credentials remain to be configured on Oracle. Multi-user provisioning/isolation and end-to-end verified signup are pending.
+- Corrected outdated docs quick link to UCII homepage. Named-list functionality and compact result/image UI were confirmed working by user.
