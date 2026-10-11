@@ -4,7 +4,7 @@
 
 The entrant registered for the Build, Ship, Shape: Amazon Developer Hackathon and submitted the official request for **$150 in AWS Promotional Credits** on 2026-09-14.
 
-The request is not guaranteed and may take up to five business days to process. One code is permitted per entrant. Do not record redemption codes, credentials, access keys, or other secrets in this repository.
+Brad subsequently reported receiving $150 in promotional credits. Redemption, remaining balance, eligibility and expiration have not been independently checked in this review. The current working application has no documented AWS service integration. One code is permitted per entrant. Do not record redemption codes, credentials, access keys, or other secrets in this repository.
 
 ## Cost principle
 

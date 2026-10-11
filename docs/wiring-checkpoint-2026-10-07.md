@@ -1,3 +1,5 @@
+> Historical engineering checkpoint. Status and next-step statements below describe the dated session, not the current delivery plan. Updated scope is in [the current plan](implementation-plan.md). The main interface uses fixed-tool Allow/Block and saved shopping lists; advanced exact approvals are retained but are not judge-demo requirements. Do not rerun historical installers or enrollment steps based solely on this record.
+
 # Wiring checkpoint — October 7, 2026
 
 Paused by Brad after successful hosted verification and layout acceptance. Resume the remaining website controls; preserve today's working integration.

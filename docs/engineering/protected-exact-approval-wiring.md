@@ -1,3 +1,5 @@
+> Historical engineering checkpoint. Status and next-step statements below describe the dated session, not the current delivery plan. Updated scope is in [the current plan](../implementation-plan.md). The main interface uses fixed-tool Allow/Block and saved shopping lists; advanced exact approvals are retained but are not judge-demo requirements. Do not rerun historical installers or enrollment steps based solely on this record.
+
 # Protected exact approval wiring — 2026-10-08
 
 The owner activated UCII exact_action_approvals at 90527da. The migration created only that table and saved a private online SQLite backup. No approval was issued by migration.

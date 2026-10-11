@@ -16,12 +16,11 @@
 
 The official Devpost rules and resources remain authoritative if this file ever conflicts with them.
 
-## Project priority
+## Project priority — updated 2026-10-11
 
-- Finish and submit the AssemblyAI Voice Agent Hackathon project first.
-- Immediately after AssemblyAI submission, this Alexa+ project becomes the next competition-build priority.
-- The Alexa+ build takes priority over the October 12-18 competition build because of the substantially larger Alexa+ prize opportunity and the need for adequate build, rehearsal, friction-log, and submission time.
-- Do not dilute the active AssemblyAI critical path with Alexa+ implementation before AssemblyAI is submitted unless a rules/eligibility preservation task is genuinely time-critical.
+AssemblyAI is completed and submitted. Alexa+ became the active competition priority. The compact Alexa+ build is accepted by Brad; current work is judge handoff and submission packaging. Early/mid architecture plans are historical, not additional build requirements.
+
+The current delivery path is the existing public web simulation and real self-hosted MCP server. Judges use the existing app account supplied privately; email signup is outside scope.
 
 ## Alexa+ implementation gate
 

@@ -1,47 +1,37 @@
-# Judging Strategy
+# Judge walkthrough and presentation
 
-The product must be valuable independently of the hackathon. Judging strategy guides presentation; it does not override engineering truth or security boundaries.
+Updated 2026-10-11. The existing public application and shared app login are the submission experience.
 
-## Tech Implementation
+## Access
 
-Prove, rather than merely describe:
+Open https://ucii-alexa-control.sportgen-ai.chatgpt.site/. Public requests need no signup. Provide the existing app login privately after Brad changes the password at the laptop terminal. Judges do not submit their email or create an account.
 
-- a real self-hosted Alexa+-compatible MCP integration;
-- public-boundary UCII integration;
-- independent identity/credential verification where required;
-- bounded authorization around a consequential action;
-- revocation followed by a fresh denial;
-- provenance sufficient to explain the decision path;
-- meaningful AWS integration if entering AWS Builder.
+Judges act as the same configured demonstration HUMAN and share saved lists, permissions and Activity. Permission events identify that HUMAN, not an individually verified judge. Credential handoff and password change are still pending.
 
-## Design
+## Short walkthrough
 
-The user should be able to understand three distinct facts:
+1. Signed out: ask “Check if my infrastructure is online”. Explain that this is a real UCII health check, not a deployment.
+2. Try “Create a shopping list called Judge demo”. Sign-in is required for personal lists.
+3. Sign in with the privately supplied app credentials.
+4. Allow shopping-list edits through the inline confirmation or Permissions page.
+5. Create the list, add an item and retrieve it. Show that it is saved and nothing is purchased.
+6. Block shopping-list edits and repeat an edit. UCII blocks the change while list viewing remains available.
+7. Open Activity to show the saved result and permission history.
+8. If time permits, show the fixed artifact check and its separate Allow/Block permission; it deploys nothing.
 
-1. what the agent can technically do;
-2. who/what the agent is cryptographically established to be;
-3. what the agent is currently authorized to do.
+Do not depend on the initial permission state: inspect it and set Block or Allow explicitly for the intended step. Shared judges may have changed the state already.
 
-Denials should explain the missing authority without encouraging bypasses. Grants should visibly communicate scope and expiry. Revocation should be immediate and understandable.
+## Three-minute video
 
-## Potential Impact
+Lead with working requests, then show sign-in, Allow, saved edit, Block, denied edit and Activity. Briefly explain the independent HUMAN/agent/controller boundaries after the visible proof. Include the bounded Alexa+ simulation disclosure. Use the tested workflow; exact-action deployment proposals are not required.
 
-Frame the problem beyond a single Alexa demo: interoperable agents increasingly gain access to consequential tools, while capability discovery alone does not provide a portable authority model. UCII supplies a reusable identity/authority layer without requiring the capability protocol itself to become the trust root.
+## What to emphasize
 
-## Quality of the Idea
+- Technical implementation: real MCP and independently enforced UCII permissions.
+- Design: compact request/result flow with minimal interruption.
+- Impact: reusable human control over agent tools.
+- Idea: the same agent/tool remains available while HUMAN permission changes execution.
 
-Avoid an ordinary API wrapper. The differentiator is a live authority-state transition around an unchanged agent and unchanged MCP capability:
+The frontend is deterministic, recipes are samples, maps/Amazon requests are external links, and live Alexa hardware is not connected. Do not claim a qualifying AWS integration based on credits alone.
 
-```text
-VERIFIED identity + NO authority       -> DENY
-VERIFIED identity + BOUNDED authority  -> EXECUTE
-VERIFIED identity + REVOKED authority  -> DENY
-```
-
-## Demo priority
-
-The three-minute demo should lead with the observable security behavior, not architecture slides. Show the denied action quickly, grant narrowly, execute successfully, revoke, and prove the same request now fails. Explain the architecture after the proof is visible.
-
-## Optional judging bonus
-
-Maintain the friction log continuously. Record actionable product feedback while memories, error messages, onboarding steps, and workarounds are fresh rather than reconstructing them at submission time.
+[Submission checklist](submission-checklist.md) · [Friction log](friction-log.md)

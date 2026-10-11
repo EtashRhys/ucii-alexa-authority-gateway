@@ -1,53 +1,52 @@
-# Submission Checklist
+# Submission checklist
 
-## Eligibility and administration
+Updated 2026-10-11. Working build accepted; submission packaging remains separate.
 
-- [x] Registered for the hackathon.
-- [x] Primary intended track: Alexa+.
-- [x] $150 AWS Promotional Credit request submitted.
-- [ ] Promotional-credit response received and handled.
-- [ ] Final official rules re-read before submission.
+## Completed / accepted
 
-## Repository
+- [x] Hackathon registration and Alexa+ track selected.
+- [x] AssemblyAI project submitted; Alexa+ promoted to build priority.
+- [x] $150 AWS credit receipt reported by Brad; redemption/balance/expiry not independently checked here.
+- [x] Public standalone backend repository and MIT license present.
+- [x] Public working Site v36.
+- [x] Real self-hosted Streamable HTTP MCP code and frontend protocol 2025-11-25 integration.
+- [x] Existing HUMAN sign-in/sign-out and protected agent signing connected.
+- [x] Public requests work signed out, per Brad's 2026-10-11 acceptance.
+- [x] Signed-in requests work, per Brad's 2026-10-11 acceptance.
+- [x] Saved shopping/named-list flow and Allow/Block accepted.
+- [x] Fixed artifact Allow/Block, successful invocation and subsequent denial accepted.
+- [x] Saved Activity and permission history accepted.
+- [x] Current scope and friction status reconciled with the final compact build.
+- [x] Judge access decision: existing app login; no registration/email collection.
 
-- [x] Standalone public repository created.
-- [x] Open-source license present.
-- [x] Initial requirements, architecture, judging, friction, feedback, and cost-control records established.
-- [ ] All source required to reproduce the submission present.
-- [ ] Setup/run instructions verified from a clean environment.
-- [ ] No secrets/private custody material present.
-- [ ] Hackathon-created/significantly updated work clearly identified.
+## Judge handoff
 
-## Alexa+ track
+- [ ] Change the app password to a unique temporary value from the laptop terminal.
+- [ ] Verify login after that change.
+- [ ] Supply Site URL, app login and short walkthrough privately.
+- [ ] Record a plan to rotate the temporary password after judging.
 
-- [ ] Exact current Alexa+ integration requirements verified from official resources.
-- [ ] Required MCP/Agent Skill technology implemented in code.
-- [ ] Working Alexa+/simulated Alexa+ experience demonstrated.
-- [ ] Self-hosted MCP requirements satisfied if using the MCP path.
+## Repository / reproducibility
 
-## UCII authority proof
+- [ ] Include or link judge-accessible exact frontend source; it currently lives in the separate Sites source repository.
+- [ ] Preserve sanitized deployed gateway/signer/nginx configuration and setup prerequisites.
+- [ ] Verify setup/run instructions from a clean environment using existing UCII dependencies.
+- [ ] Final full-repository/source-package secrets review.
+- [ ] Clearly identify new/significantly updated hackathon work separately from pre-existing UCII.
 
-- [ ] Agent identity/credential evidence verified as required.
-- [ ] No-authority request denied.
-- [ ] Bounded authority grant demonstrated.
-- [ ] Authorized request executed.
-- [ ] Delegated authority revoked.
-- [ ] Same verified identity and capability denied after revocation.
-- [ ] Material events have attributable provenance.
-- [ ] LLM/agent cannot mint authority.
+## Submission materials
 
-## Mini challenges
+- [ ] Final official rules/FAQ review before submission, including MCP compatibility and deadline.
+- [ ] Complete project description and public source links.
+- [ ] Public English demo video <=3 minutes.
+- [ ] Complete required product feedback for technologies actually used.
+- [ ] Select factual friction entries; internal issues are not Amazon API failures.
+- [ ] Confirm Open Source mini-challenge eligibility against official requirements.
+- [ ] Enter AWS Builder only if a genuine qualifying AWS integration exists; none is established by this review.
+- [ ] Confirm final track/mini-challenge fields and submit before the official deadline.
 
-- [ ] AWS Builder: decide enter/skip based on implemented qualifying integration.
-- [ ] Open Source: decide enter/skip based on official contribution requirements and qualifying work.
+## Scope exclusions
 
-## Submission package
+Email signup/SMTP, multi-user onboarding, live Alexa device integration, paid LLMs, purchases, infrastructure deployment and advanced exact-approval UI are not current build tasks. Judges share one demonstration identity and state.
 
-- [ ] Project text description complete.
-- [ ] Public repository URL final.
-- [ ] Demo video <= 3 minutes, public, English.
-- [ ] Product feedback complete for every Amazon/AWS technology used.
-- [ ] Friction log reviewed for optional judging bonus.
-- [ ] Track and mini-challenge fields accurate.
-- [ ] Feature requests included if useful.
-- [ ] Final demo and repository tested before deadline.
+[Current plan](implementation-plan.md) · [Judge walkthrough](judging-strategy.md) · [Build breakdown](build-review-2026-10-11.md)
