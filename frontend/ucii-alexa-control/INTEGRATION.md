@@ -1,3 +1,5 @@
+> **Historical export note (2026-10-13):** The text below is retained verbatim from the Sites v36 export and may describe an earlier disconnected scaffold. It is **not** the authoritative description of the owner-tested published deployment. See [`../../docs/website-ui-integration.md`](../../docs/website-ui-integration.md) and [`../../docs/reproduction.md`](../../docs/reproduction.md). Do not infer the live gateway is disconnected solely from this document.
+
 # UCII for Alexa+ integration
 
 This application starts disconnected. No identity, policy, decision, execution or provenance is simulated.
