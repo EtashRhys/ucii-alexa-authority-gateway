@@ -1,6 +1,6 @@
 # Current architecture
 
-Updated 2026-10-11.
+Updated 2026-10-13 (source-location correction; no runtime changes).
 
 ## Components
 
@@ -30,6 +30,6 @@ Canonical proposals, exact approvals, reservation/consumption and reconciliation
 
 ## Reproduction boundary
 
-The backend is in this public repository. The frontend is in the separate Sites source repository, with published v36 source commit df8e53713e5046a8187fc03bfe28c07285f10ab1. Full frontend-source packaging and sanitized deployed configuration inventory remain submission tasks.
+The backend and exported Sites v36 frontend now reside in this public repository: [`gateway/`](../gateway/) and [`frontend/ucii-alexa-control/`](../frontend/ucii-alexa-control/). The frontend import landed on `main` at `fbd697e` on 2026-10-13. The original published v36 source reference was `df8e53713e5046a8187fc03bfe28c07285f10ab1`. The export's local starter documentation may not describe the live wiring accurately. Complete sanitized deployment configuration, custody prerequisites and clean-environment reproduction remain unverified; see [reproduction](reproduction.md).
 
 [Historical architecture](archive/architecture.md) · [Current integration](website-ui-integration.md)
