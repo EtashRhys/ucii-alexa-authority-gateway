@@ -1,5 +1,7 @@
 # Finished build review — 2026-10-11
 
+> **2026-10-13 source-import addendum:** This is a historical review of the October 11 baseline, not the current repository inventory. The Sites v36 frontend was subsequently imported into this repository under [`frontend/ucii-alexa-control/`](../frontend/ucii-alexa-control/) on `main` (commit `fbd697e`). References below to missing frontend source and outstanding frontend packaging describe the earlier snapshot and are superseded by this addendum. Sanitized live configuration, custody dependencies and clean-room reproduction remain unverified. See [`docs/reproduction.md`](reproduction.md).
+
 ## Review basis
 
 Backend baseline: main at efe0442cefc880fe72b434f33c3c46bbc8474b2d. Published frontend: public Site v36 at df8e53713e5046a8187fc03bfe28c07285f10ab1. Brad confirmed signed-out and signed-in requests work on October 11. Earlier live acceptance and tests are retained in the historical friction log.
