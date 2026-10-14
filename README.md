@@ -4,7 +4,7 @@ A working web conversation simulation backed by real self-hosted MCP and UCII id
 
 **Use a tool. Set a boundary. Enforce it. Record what happened.**
 
-## Current build — 2026-10-11
+## Current build — reviewed 2026-10-13
 
 [Open the application](https://ucii-alexa-control.sportgen-ai.chatgpt.site).
 
@@ -26,7 +26,7 @@ The page is public. Judges will use the existing app account, supplied privately
 
 [Build breakdown](docs/build-review-2026-10-11.md) · [Current plan](docs/implementation-plan.md) · [Architecture](docs/architecture.md) · [Judge walkthrough](docs/judging-strategy.md) · [Friction log](docs/friction-log.md) · [Submission checklist](docs/submission-checklist.md)
 
-This GitHub repository contains gateway/backend code, tests, deployment helpers and project records. The published frontend remains in its separate Sites source repository. Consolidating or providing judge-accessible frontend source and verifying clean setup remain submission tasks; do not claim this repository alone reproduces the full application.
+This repository now contains the [exported Sites v36 frontend](frontend/ucii-alexa-control/) alongside the gateway/backend code, tests, deployment helpers and project records. The frontend was imported to `main` on 2026-10-13 (commit `fbd697e`). This closes the missing-frontend-source packaging task. It does **not** establish a clean-room reproduction of the live service: protected signer/controller custody, existing UCII infrastructure, nginx configuration and deployed runtime settings are external. See the [reproduction guide](docs/reproduction.md) for prerequisites, safe inspection steps and outstanding verification.
 
 Advanced exact-action approval work remains implemented and tested but is outside the current interface and required demo. Earlier plans are historical references.
 
