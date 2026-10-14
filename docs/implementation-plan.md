@@ -1,6 +1,6 @@
 # Current implementation plan
 
-Updated 2026-10-11. The working product scope is locked for submission preparation.
+Updated 2026-10-13. The working product scope is locked for submission preparation.
 
 ## Accepted build
 
@@ -47,8 +47,9 @@ The prior statement that an existing SMTP account had been selected was incorrec
 - [ ] Change the app password at the laptop terminal.
 - [ ] Supply credentials privately with the short judge walkthrough.
 - [ ] Prepare the <=3-minute demo video, description and required feedback.
-- [ ] Make the exact frontend source judge-accessible alongside this backend.
-- [ ] Verify reproducible setup and preserve sanitized deployed gateway/signer/nginx configuration.
+- [x] Import exported Sites v36 frontend into this public repository at `frontend/ucii-alexa-control/` (2026-10-13, `fbd697e`).
+- [x] Document the known reproduction boundary and safe local inspection steps in `docs/reproduction.md`.
+- [ ] Verify clean-environment reproduction and preserve sanitized deployed gateway/signer/nginx configuration; not established by source import.
 - [ ] Complete the submission checklist and final official-rule review.
 
 The owner has already tested the signed-out/signed-in flows; no repeat test is required merely to close this documentation update. Recheck login after the password change.
