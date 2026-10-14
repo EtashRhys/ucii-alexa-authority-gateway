@@ -1,6 +1,6 @@
 # Current website integration
 
-Updated 2026-10-11. Published Site v36 corresponds to frontend source df8e53713e5046a8187fc03bfe28c07285f10ab1 in the separate Sites repository.
+Updated 2026-10-13. Exported Sites v36 frontend is now in this repository at [`frontend/ucii-alexa-control/`](../frontend/ucii-alexa-control/) (import `fbd697e`); original published source reference: `df8e53713e5046a8187fc03bfe28c07285f10ab1`. The table below documents the owner-accepted live integration; do not assume every exported starter file reflects the deployed runtime without comparison.
 
 | Frontend surface | Adapter / backend path | Access |
 | --- | --- | --- |
