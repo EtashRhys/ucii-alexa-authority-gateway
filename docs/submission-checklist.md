@@ -1,6 +1,6 @@
 # Submission checklist
 
-Updated 2026-10-11. Working build accepted; submission packaging remains separate.
+Updated 2026-10-13. Working build accepted; frontend source imported; remaining deployment reproducibility work tracked separately.
 
 ## Completed / accepted
 
@@ -28,9 +28,10 @@ Updated 2026-10-11. Working build accepted; submission packaging remains separat
 
 ## Repository / reproducibility
 
-- [ ] Include or link judge-accessible exact frontend source; it currently lives in the separate Sites source repository.
+- [x] Include exported Sites v36 frontend source in this public repository at `frontend/ucii-alexa-control/` (import commit `fbd697e`).
+- [x] Publish source layout, prerequisites and explicit verification limits in `docs/reproduction.md`.
 - [ ] Preserve sanitized deployed gateway/signer/nginx configuration and setup prerequisites.
-- [ ] Verify setup/run instructions from a clean environment using existing UCII dependencies.
+- [ ] Execute and record a clean-environment frontend/backend setup and full end-to-end verification; the documented instructions are not yet verified as reproducing the live deployment.
 - [ ] Final full-repository/source-package secrets review.
 - [ ] Clearly identify new/significantly updated hackathon work separately from pre-existing UCII.
 
